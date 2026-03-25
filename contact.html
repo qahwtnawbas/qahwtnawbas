@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تواصل معنا |  قهوتنا وبس</title>
+    <meta name="description" content="نحن هنا للاستماع إليك. تواصل مع إدارة وفروع قهوتنا وبس بكل سهولة.">
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Tajawal:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. CORE VARIABLES & THEME
+           ========================================================================== */
+        :root {
+            --q-primary: #1B4332; --q-primary-light: #2D6A4F; --q-primary-dark: #081C15;
+            --q-accent: #40916C; --q-gold: hwb(120 66% 8%); --q-white: #ffffff;
+            --q-off-white: #f8fbf9; --q-dark: #111827; --q-gray: #6b7280;
+            --q-danger: #e63946; --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2); --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-main: 'IBM Plex Sans Arabic', sans-serif; --font-heading: 'Tajawal', sans-serif;
+            --trans-fast: 0.3s ease; --trans-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --z-nav: 1000; --z-dropdown: 1010;
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--q-off-white); }
+        ::-webkit-scrollbar-thumb { background: var(--q-accent); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--q-primary); }
+
+        body { font-family: var(--font-main); background-color: var(--q-off-white); color: var(--q-dark); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 900; }
+        a { text-decoration: none; color: inherit; transition: var(--trans-fast); }
+        ul { list-style: none; }
+        button { font-family: var(--font-main); cursor: pointer; border: none; background: none; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
+
+        /* ==========================================================================
+           3. PRELOADER & SKELETONS
+           ========================================================================== */
+        #preloader { position: fixed; inset: 0; background: var(--q-primary-dark); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease; }
+        .loader-cup { width: 80px; height: 80px; border: 4px solid var(--q-gold); border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; animation: floatCup 2s infinite ease-in-out; }
+        .loader-cup::after { content: ''; position: absolute; top: 10px; right: -20px; width: 25px; height: 40px; border: 4px solid var(--q-gold); border-radius: 20px; }
+        .loader-smoke { display: flex; gap: 10px; position: absolute; top: -40px; left: 15px; }
+        .smoke-line { width: 4px; height: 30px; background: rgba(212,163,115,0.6); border-radius: 5px; animation: smokeRise 1.5s infinite ease-in; opacity: 0; }
+        .smoke-line:nth-child(2) { animation-delay: 0.4s; height: 40px; }
+        .smoke-line:nth-child(3) { animation-delay: 0.8s; }
+        @keyframes floatCup { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes smokeRise { 0% { transform: translateY(0) scaleY(1); opacity: 0.8; } 100% { transform: translateY(-30px) scaleY(2); opacity: 0; } }
+        .loader-text { margin-top: 30px; color: var(--q-gold); font-family: var(--font-heading); font-size: 20px; letter-spacing: 2px; }
+
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 15px; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* ==========================================================================
+           4. MEGA HEADER
+           ========================================================================== */
+        .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: var(--z-nav); background: transparent; padding: 25px 0; border-bottom: 1px solid transparent; transition: var(--trans-smooth); }
+        .main-header.scrolled { padding: 10px 0; background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: var(--glass-shadow); border-bottom-color: var(--glass-border); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { font-family: var(--font-heading); font-size: 28px; color: var(--q-white); border: 3px solid var(--q-white); padding: 5px 20px; transition: var(--trans-fast); letter-spacing: 1px; }
+        .main-header.scrolled .logo-box { color: var(--q-primary); border-color: var(--q-primary); }
+        .logo-box:hover { background: var(--q-primary); color: var(--q-white) !important; transform: scale(1.05); }
+
+        .nav-menu { display: flex; align-items: center; gap: 35px; }
+        .nav-item { position: relative; font-weight: 700; color: var(--q-white); font-size: 16px; padding: 10px 0; transition: var(--trans-fast); cursor: pointer; }
+        .main-header.scrolled .nav-item { color: var(--q-dark); }
+        .nav-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background: var(--q-gold); transition: var(--trans-fast); border-radius: 5px; }
+        .nav-item:hover::after, .nav-item.active::after { width: 100%; }
+        .nav-item:hover { color: var(--q-gold); }
+        .main-header.scrolled .nav-item:hover, .main-header.scrolled .nav-item.active { color: var(--q-primary); }
+
+        .has-dropdown { display: flex; align-items: center; gap: 8px; }
+        .has-dropdown i { font-size: 10px; transition: 0.3s; }
+        .has-dropdown:hover i { transform: rotate(180deg); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; min-width: 240px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); opacity: 0; visibility: hidden; transform: translateY(15px); transition: var(--trans-smooth); padding: 10px 0; z-index: var(--z-dropdown); display: flex; flex-direction: column; }
+        .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-link { display: flex; align-items: center; gap: 10px; padding: 12px 20px; color: var(--q-dark) !important; font-size: 15px !important; transition: var(--trans-fast); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .dropdown-link:hover { background: rgba(64,145,108,0.08); color: var(--q-primary) !important; padding-right: 30px; }
+
+        .btn-auth { background: var(--q-primary); color: var(--q-white) !important; padding: 12px 28px; border-radius: 8px; font-weight: 800; font-size: 15px; transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(27, 67, 50, 0.3); }
+        .btn-auth:hover { background: var(--q-accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(64,145,108,0.5); }
+
+        /* ==========================================================================
+           5. MOBILE MENU (HAMBURGER)
+           ========================================================================== */
+        .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--q-white); font-size: 28px; cursor: pointer; transition: 0.3s; }
+        .main-header.scrolled .mobile-menu-btn { color: var(--q-primary-dark); }
+        .mobile-nav-overlay { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; background: #040d0a; z-index: 10000; padding: 60px 20px; box-shadow: 5px 0 30px rgba(0,0,0,0.8); transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-right: 2px solid var(--q-gold); }
+        .mobile-nav-overlay.active { left: 0; }
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; border: none; color: var(--q-white); font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .close-menu-btn:hover { background: var(--q-danger); transform: rotate(90deg); }
+        .mobile-logo { color: var(--q-white); font-family: var(--font-heading); font-size: 24px; margin-bottom: 30px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .mobile-menu-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
+        .mobile-menu-list a { color: #ffffff; font-size: 17px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; transition: 0.3s; background: rgba(255,255,255,0.03); }
+        .mobile-menu-list a i { color: var(--q-gold); width: 20px; text-align: center; }
+        .mobile-menu-list a:hover { background: var(--q-primary); padding-left: 25px; color: var(--q-gold); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none !important; } 
+            .nav-container { position: relative; }
+            .mobile-menu-btn { display: block; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+        }
+
+        /* ==========================================================================
+           6. CONTACT HERO & ENGINE
+           ========================================================================== */
+        .contact-hero { position: relative; height: 50vh; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background-color: var(--q-primary-dark); }
+        .contact-hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat; opacity: 0.3; animation: slowZoom 20s infinite alternate linear; }
+        @keyframes slowZoom { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+        .contact-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--q-off-white) 0%, transparent 100%); z-index: 2; opacity: 0.9; }
+        .contact-hero-content { position: relative; z-index: 3; color: var(--q-white); max-width: 800px; padding: 0 20px; margin-top: 50px; }
+        .contact-hero-content h1 { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 20px; text-shadow: 0 10px 20px rgba(0,0,0,0.5); color: var(--q-primary-dark); }
+        .contact-hero-content p { font-size: 1.3rem; color: var(--q-gray); font-weight: 500; }
+
+        .contact-section { padding: 40px 0 120px; position: relative; z-index: 5; margin-top: -80px; }
+        .contact-category { margin-bottom: 60px; }
+        .category-title { font-size: 2rem; color: var(--q-primary-dark); margin-bottom: 30px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 15px; }
+        .category-title i { color: var(--q-gold); background: var(--q-primary); width: 50px; height: 50px; border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 10px 20px rgba(27,67,50,0.2); }
+
+        .c-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .c-card { background: var(--q-white); border-radius: 20px; padding: 30px; box-shadow: var(--glass-shadow); transition: var(--trans-smooth); border: 1px solid rgba(0,0,0,0.03); display: flex; align-items: center; gap: 20px; text-decoration: none; color: inherit; }
+        .c-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(212,163,115,0.15); border-color: var(--q-gold); }
+        .c-icon { font-size: 35px; color: var(--q-primary); transition: var(--trans-fast); }
+        .c-card:hover .c-icon { color: var(--q-gold); transform: scale(1.1); }
+        .c-info { display: flex; flex-direction: column; }
+        .c-label { font-size: 14px; color: var(--q-gray); font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
+        .c-value { font-size: 20px; font-weight: 900; color: var(--q-dark); font-family: var(--font-main); direction: ltr; text-align: right; }
+        .empty-msg { grid-column: 1 / -1; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.3); color: var(--q-danger); padding: 30px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 18px; }
+
+        
+/* ==========================================================================
+           7. FLOATING AI BUTTON & TOOLTIP (NEW)
+           ========================================================================== */
+        /* ==========================================================================
+   7. FLOATING AI BUTTON & TOOLTIP (CENTERED)
+   ========================================================================== */
+/* الغلاف الرئيسي: حطيناه بالوسط بالملي */
+.ai-float-wrapper { 
+    position: fixed; 
+    bottom: 20px; 
+    left: 50%; /* ندفشه للنص */
+    transform: translateX(-50%); /* نرجعه لنص حجمه عشان يتسنتر 100% */
+    z-index: 9999; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; /* بنسنتر الرسالة فوق الزر بالضبط */
+}
+
+/* شكل الرسالة (Tooltip) */
+.ai-tooltip { 
+    background: var(--q-white); 
+    border: 2px solid var(--q-gold); 
+    color: var(--q-primary-dark); 
+    font-family: var(--font-heading); 
+    font-weight: 900; 
+    font-size: 15px; 
+    padding: 12px 20px; 
+    border-radius: 20px; /* الحواف كلها صارت دائرية */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+    margin-bottom: 15px; 
+    position: relative; 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.8); 
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    pointer-events: none;
+    white-space: nowrap; /* عشان الكلام ما ينزل سطرين */
+}
+.ai-tooltip.active { opacity: 1; transform: translateY(0) scale(1); }
+
+/* المثلث الذهبي اللي بيأشر على الزر (سنترناه بالنص) */
+.ai-tooltip::after { 
+    content: ''; 
+    position: absolute; 
+    bottom: -10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    border-width: 10px 10px 0 10px; 
+    border-style: solid; 
+    border-color: var(--q-gold) transparent transparent transparent; 
+}
+
+/* المثلث الأبيض الداخلي (عشان يعطي شكل الإطار) */
+.ai-tooltip::before { 
+    content: ''; 
+    position: absolute; 
+    bottom: -6px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    border-width: 8px 8px 0 8px; 
+    border-style: solid; 
+    border-color: var(--q-white) transparent transparent transparent; 
+    z-index: 2; 
+}
+
+/* زر الدماغ (الأنيميشن والشكل الخارجي) */
+.ai-btn-circle { 
+    width: 65px; 
+    height: 65px; 
+    background: linear-gradient(135deg, var(--q-primary-dark), var(--q-primary)); 
+    border-radius: 50%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    color: var(--q-gold); 
+    font-size: 30px; 
+    box-shadow: 0 10px 30px rgba(27,67,50,0.5); 
+    border: 3px solid var(--q-gold); 
+    transition: var(--trans-smooth); 
+    cursor: pointer; 
+    text-decoration: none; 
+    animation: floatBtn 3s infinite ease-in-out; 
+}
+.ai-btn-circle:hover { 
+    transform: scale(1.1); 
+    background: var(--q-gold); 
+    color: var(--q-primary-dark); 
+    border-color: var(--q-primary-dark); 
+    box-shadow: 0 15px 40px rgba(212,163,115,0.6); 
+}
+@keyframes floatBtn { 
+    0%, 100% { transform: translateY(0); } 
+    50% { transform: translateY(-10px); } 
+}
+        /* ==========================================================================
+           8. FIREBASE NEWSLETTER
+           ========================================================================== */
+        .newsletter-sec { padding: 100px 0; background-color: var(--q-primary); color: var(--q-white); text-align: center; position: relative; overflow: hidden; border-top: 5px solid var(--q-gold); }
+        .nl-bg { position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; }
+        .nl-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+        .nl-form { display: flex; background: var(--q-white); padding: 8px; border-radius: 60px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transition: var(--trans-fast); margin-top: 30px; }
+        .nl-form input { flex: 1; border: none; padding: 0 30px; font-size: 16px; font-family: inherit; color: var(--q-dark); border-radius: 60px; background: transparent; }
+        .nl-form button { background: var(--q-primary-dark); color: var(--q-white); padding: 18px 40px; border-radius: 50px; font-weight: 900; font-family: var(--font-heading); transition: var(--trans-fast); }
+        .nl-form button:hover { background: var(--q-gold); color: var(--q-primary-dark); }
+
+        /* ==========================================================================
+           9. THE MEGA FOOTER
+           ========================================================================== */
+        .mega-footer { background: #040d0a; color: #9ca3af; padding: 100px 0 0; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 60px; margin-bottom: 60px; }
+        .f-brand h3 { font-size: 32px; color: var(--q-white); margin-bottom: 25px; }
+        .f-brand h3 span { color: var(--q-gold); }
+        .f-links h4 { color: var(--q-white); font-size: 22px; margin-bottom: 30px; position: relative; display: inline-block; }
+        .f-links h4::after { content: ''; position: absolute; bottom: -10px; right: 0; width: 40px; height: 3px; background: var(--q-gold); }
+        .f-links ul li { margin-bottom: 15px; }
+        .f-links ul a { transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; }
+        .f-links ul a:hover { color: var(--q-gold); }
+        .f-contact li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+        .f-contact i { color: var(--q-gold); font-size: 20px; margin-top: 5px; }
+        .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 30px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .dev-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); }
+        .dev-badge a { color: var(--q-white); font-weight: 900; font-family: var(--font-heading); }
+
+        @media (max-width: 992px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 768px) { 
+            .footer-grid { grid-template-columns: 1fr; } 
+            .c-grid { grid-template-columns: 1fr; }
+            .nl-form { flex-direction: column; background: transparent; box-shadow: none; gap: 15px; } 
+            .nl-form input, .nl-form button { width: 100%; border-radius: 10px; padding: 20px; background: var(--q-white);}
+        }
+    </style>
+</head>
+<body>
+
+    
+
+    <div class="ai-float-wrapper">
+        <div class="ai-tooltip" id="aiBubble">أنا بسلي جربني!</div>
+        <a href="ai-chat.html" class="ai-btn-circle" title="احكي مع فستق">
+            <i class="fas fa-brain"></i>
+        </a>
+    </div>
+
+    <header class="main-header" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-box">قهوتنا وبس</a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="mobile-nav-overlay" id="mobileNav">
+                <button class="close-menu-btn" id="closeMenuBtn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="mobile-logo">قهوتنا وبس</div>
+                <ul class="mobile-menu-list">
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                    <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> عنا</a></li>
+                    <li><a href="menu.html"><i class="fa-solid fa-mug-hot"></i> المنيو</a></li>
+                    <li><a href="rating.html"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                    <li><a href="complaints.html"><i class="fa-solid fa-head-side-cough"></i> الشكاوى</a></li>
+                    <li><a href="contact.html" style="color: var(--q-gold); font-weight: 900;"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                    <li><a href="location.html"><i class="fa-solid fa-location-dot"></i> الفروع</a></li>
+                    <li><a href="jobs.html"><i class="fa-solid fa-briefcase"></i> التوظيف</a></li>
+                    <li><a href="bingo.html" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> لعبة البينجو</a></li>
+                    <li><a href="login.html"><i class="fa-solid fa-shield-halved"></i> الإدارة</a></li>
+                </ul>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-item">الرئيسية</a></li>
+                    <li><a href="about.html" class="nav-item">عنا</a></li>
+                    <li class="nav-item has-dropdown">
+                        <span>المنيو <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-mug-hot"></i> المشروبات الساخنة</a></li>
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-glass-water"></i> المشروبات الباردة</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item has-dropdown active">
+                        <span>خدمات الزبائن <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="rating.html" class="dropdown-link"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                            <li><a href="complaints.html" class="dropdown-link"><i class="fa-solid fa-headset"></i> مكتب الشكاوى</a></li>
+                            <li><a href="contact.html" class="dropdown-link" style="color:var(--q-primary)!important;"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="location.html" class="nav-item">الفروع</a></li>
+                    <li><a href="jobs.html" class="nav-item">التوظيف</a></li>
+                    <li><a href="bingo.html" class="nav-item" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> بينجو</a></li>
+                    <li>
+                        <a href="login.html" class="btn-auth"><i class="fa-solid fa-shield-halved"></i> الإدارة المركزية</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="contact-hero">
+        <div class="contact-hero-bg"></div>
+        <div class="contact-overlay"></div>
+        <div class="contact-hero-content" data-aos="zoom-in" data-aos-duration="1200">
+            <h1>بدك تحكي معنا ؟</h1>
+            <p>تاكد انه لما ترن رح نرد باسرع وقت</p>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+            
+            <div class="contact-category" data-aos="fade-up">
+                <h2 class="category-title"><i class="fa-solid fa-phone-volume"></i> الهواتف المعتمدة للإدارة والفروع</h2>
+                <div class="c-grid" id="phonesGrid"></div>
+            </div>
+
+            <div class="contact-category" data-aos="fade-up" data-aos-delay="100">
+                <h2 class="category-title"><i class="fa-solid fa-envelope-open-text"></i> البريد الإلكتروني والمراسلات</h2>
+                <div class="c-grid" id="emailsGrid"></div>
+            </div>
+
+            <div class="contact-category" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="category-title"><i class="fa-solid fa-hashtag"></i> المنصات الرقمية (السوشيال ميديا)</h2>
+                <div class="c-grid" id="socialsGrid"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="newsletter-sec">
+        <div class="nl-bg"></div>
+        <div class="container nl-content" data-aos="zoom-in">
+            <div class="nl-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <h2>احصل على خصومات سرية</h2>
+            <p>انضم إلى قائمتنا البريدية لتصلك العروض الحصرية على مشروباتك المفضلة وكوبونات نظام البينجو.</p>
+            <form id="dbEmailForm" class="nl-form">
+                <input type="email" id="dbEmailInput" placeholder="أدخل بريدك الإلكتروني هنا..." required autocomplete="off">
+                <button type="submit" id="dbBtn">تسجيل الإيميل</button>
+            </form>
+            <div id="dbAlert" style="display:none; margin-top:15px; padding:10px; border-radius:10px; font-weight:bold;"></div>
+        </div>
+    </section>
+
+    <footer class="mega-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="f-brand" data-aos="fade-up" data-aos-delay="0">
+                    <h3>قهوتنا <span>وبس</span></h3>
+                    <p></p>
+                </div>
+                <div class="f-links" data-aos="fade-up" data-aos-delay="100">
+                    <h4>تصفح الموقع</h4>
+                    <ul>
+                        <li><a href="index.html">الصفحة الرئيسية</a></li>
+                        <li><a href="index.html#menu">قائمة المشروبات (المنيو)</a></li>
+                        <li><a href="index.html#branches">فروعنا المعتمدة</a></li>
+                        <li><a href="bingo.html">لعبة البينجو وكوبونات الخصم</a></li>
+                    </ul>
+                </div>
+                <div class="f-links" data-aos="fade-up" data-aos-delay="200">
+                    <h4>الإدارة والخدمات</h4>
+                    <ul>
+                        <li><a href="jobs.html">بوابة التوظيف الموحدة</a></li>
+                        <li><a href="rating.html">تقييم جودة الخدمة</a></li>
+                        <li><a href="complaints.html">مكتب معالجة الشكاوى</a></li>
+                        <li><a href="login.html" style="color: var(--q-gold);">دخول الإدارة المركزية</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="f-bottom">
+                <div style="color: #9ca3af;">&copy; 2026 جميع الحقوق محفوظة لعلامة "قهوتنا وبس" التجارية.</div>
+                <div class="dev-badge">
+                    <span>System Engineered with <i class="fa-solid fa-heart"></i> by</span>
+                    <a href="#">KARAM GHANDI</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // --- 1. قائمة الموبايل (البرجر) ---
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeMenuBtn');
+
+        if (mobileBtn && mobileNav) {
+            mobileBtn.addEventListener('click', () => { mobileNav.classList.add('active'); });
+        }
+        if (closeBtn && mobileNav) {
+            closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
+        }
+        document.addEventListener('click', (e) => {
+            if (mobileNav && mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && !mobileBtn.contains(e.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // --- 2. الذكاء الاصطناعي (AI Chat Tooltip) ---
+        const aiPhrases = [
+            "تعال نحكي انا وياك 😉",
+            "بدك تطلب ؟ ☕",
+            "تعال عنا هسا 🏃‍♂️",
+            "أنا بسلي جربني 🧠",
+            "عندك استفسار؟ اسألني!",
+            "بتحب القهوة الساخنة ولا الباردة؟"
+        ];
+        const aiBubble = document.getElementById('aiBubble');
+        
+        // تشغيل المؤقت كل 5 ثواني
+        setInterval(() => {
+            // اختيار جملة عشوائية
+            const randomPhrase = aiPhrases[Math.floor(Math.random() * aiPhrases.length)];
+            aiBubble.innerText = randomPhrase;
+            
+            // إظهار الرسالة
+            aiBubble.classList.add('active');
+            
+            // إخفاء الرسالة بعد 3 ثواني
+            setTimeout(() => {
+                aiBubble.classList.remove('active');
+            }, 3000);
+            
+        }, 5000); // تتكرر العملية كل 5000 ملي ثانية (5 ثواني)
+
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // إعدادات قاعدة بياناتك (الماستر)
+        const firebaseConfig = { apiKey: "AIzaSyBQLp5FeHaP3vcJfuY22DtGu48j0fyveb0", authDomain: "qahwtna-b65ca.firebaseapp.com", projectId: "qahwtna-b65ca" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => document.getElementById('preloader').style.display = 'none', 600);
+            }, 800);
+        });
+
+        AOS.init({ once: true, offset: 80, duration: 800 });
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        document.querySelectorAll('.has-dropdown').forEach(item => {
+            item.addEventListener('click', function() {
+                if(window.innerWidth <= 768) {
+                    this.classList.toggle('active-mobile');
+                }
+            });
+        });
+
+        // --- محرك جلب البيانات الذكي (The Smart Fetch Engine) ---
+        const phonesGrid = document.getElementById('phonesGrid');
+        const emailsGrid = document.getElementById('emailsGrid');
+        const socialsGrid = document.getElementById('socialsGrid');
+
+        function renderSkeletons(gridElement, count = 3) {
+            let html = '';
+            for(let i=0; i<count; i++) {
+                html += `
+                <div class="c-card" style="pointer-events:none;">
+                    <div class="skeleton" style="width:40px; height:40px; border-radius:10px; flex-shrink:0;"></div>
+                    <div style="width:100%;">
+                        <div class="skeleton" style="width:40%; height:15px; margin-bottom:10px;"></div>
+                        <div class="skeleton" style="width:80%; height:25px;"></div>
+                    </div>
+                </div>`;
+            }
+            gridElement.innerHTML = html;
+        }
+
+        async function loadDynamicContacts() {
+            renderSkeletons(phonesGrid);
+            renderSkeletons(emailsGrid);
+            renderSkeletons(socialsGrid);
+
+            try {
+                const snapshot = await getDocs(collection(db, "contacts"));
+                
+                let phonesHTML = '';
+                let emailsHTML = '';
+                let socialsHTML = '';
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const type = data.type ? data.type.toLowerCase() : '';
+                    
+                    if(type === 'phone') {
+                        phonesHTML += `
+                        <a href="tel:${data.value}" class="c-card">
+                            <i class="fa-solid fa-phone c-icon"></i>
+                            <div class="c-info">
+                                <span class="c-label">اتصل بنا</span>
+                                <span class="c-value">${data.value}</span>
+                            </div>
+                        </a>`;
+                    } 
+                    else if(type === 'email') {
+                        emailsHTML += `
+                        <a href="mailto:${data.value}" class="c-card">
+                            <i class="fa-solid fa-envelope c-icon" style="color:#f59e0b;"></i>
+                            <div class="c-info">
+                                <span class="c-label">البريد الإلكتروني</span>
+                                <span class="c-value" style="font-size:16px;">${data.value}</span>
+                            </div>
+                        </a>`;
+                    } 
+                    else {
+                        let iconClass = 'fa-link';
+                        let platformName = 'رابط خارجي';
+                        let directLink = data.value;
+                        let iconColor = 'var(--q-primary)';
+
+                        if(type === 'whatsapp') { 
+                            iconClass = 'fa-whatsapp'; platformName = 'واتساب'; iconColor = '#25D366';
+                            directLink = `https://wa.me/${data.value}`; 
+                        }
+                        else if(type === 'instagram') { 
+                            iconClass = 'fa-instagram'; platformName = 'انستغرام'; iconColor = '#E1306C';
+                            directLink = data.value.includes('http') ? data.value : `https://instagram.com/${data.value.replace('@','')}`; 
+                        }
+                        else if(type === 'facebook') { 
+                            iconClass = 'fa-facebook'; platformName = 'فيسبوك'; iconColor = '#1877F2';
+                            directLink = data.value.includes('http') ? data.value : `https://facebook.com/${data.value}`; 
+                        }
+                        else if(type === 'tiktok') { 
+                            iconClass = 'fa-tiktok'; platformName = 'تيك توك'; iconColor = '#000000';
+                            directLink = data.value.includes('http') ? data.value : `https://tiktok.com/@${data.value.replace('@','')}`; 
+                        }
+                        else if(type === 'snapchat') { 
+                            iconClass = 'fa-snapchat'; platformName = 'سناب شات'; iconColor = '#FFFC00';
+                            directLink = data.value.includes('http') ? data.value : `https://snapchat.com/add/${data.value}`; 
+                        }
+
+                        socialsHTML += `
+                        <a href="${directLink}" target="_blank" class="c-card">
+                            <i class="fa-brands ${iconClass} c-icon" style="color:${iconColor};"></i>
+                            <div class="c-info">
+                                <span class="c-label">تابعنا على ${platformName}</span>
+                                <span class="c-value" style="direction:ltr; font-size:15px; color:#4b5563;">انقر للتوجه للمنصة &larr;</span>
+                            </div>
+                        </a>`;
+                    }
+                });
+
+                phonesGrid.innerHTML = phonesHTML !== '' ? phonesHTML : '<div class="empty-msg"><i class="fa-solid fa-circle-exclamation"></i> لا توجد أرقام هواتف مسجلة حالياً.</div>';
+                emailsGrid.innerHTML = emailsHTML !== '' ? emailsHTML : '<div class="empty-msg"><i class="fa-solid fa-circle-exclamation"></i> لا يوجد بريد إلكتروني مسجل حالياً.</div>';
+                socialsGrid.innerHTML = socialsHTML !== '' ? socialsHTML : '<div class="empty-msg"><i class="fa-solid fa-circle-exclamation"></i> لا توجد روابط منصات مسجلة حالياً.</div>';
+
+            } catch (error) {
+                console.error("Firebase Contact Sync Error:", error);
+                const errorMsg = '<div class="empty-msg" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> خطأ في جلب البيانات من الخوادم.</div>';
+                phonesGrid.innerHTML = errorMsg;
+                emailsGrid.innerHTML = errorMsg;
+                socialsGrid.innerHTML = errorMsg;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadDynamicContacts);
+
+        // --- NEWSLETTER FIREBASE SYNC ---
+        document.getElementById('dbEmailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('dbBtn');
+            const box = document.getElementById('dbAlert');
+            const input = document.getElementById('dbEmailInput');
+            
+            btn.innerHTML = 'جاري التوثيق... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, "newsletter"), { 
+                    email: input.value.trim(), 
+                    page: "Contact Us", 
+                    timestamp: Date.now() 
+                });
+                
+                box.innerHTML = "تم تسجيل إيميلك بنجاح. ترقب عروضنا!";
+                box.style.background = "rgba(16, 185, 129, 0.1)"; box.style.color = "#10b981"; box.style.border = "1px solid #10b981";
+                box.style.display = "block";
+                input.value = '';
+            } catch (error) {
+                box.innerHTML = "حدث خطأ بالاتصال بالسحابة.";
+                box.style.background = "rgba(239, 68, 68, 0.1)"; box.style.color = "#ef4444"; box.style.border = "1px solid #ef4444";
+                box.style.display = "block";
+            } finally {
+                btn.innerHTML = 'تسجيل الإيميل';
+                btn.disabled = false;
+                setTimeout(() => box.style.display = "none", 5000);
+            }
+        });
+    </script>
+</body>
+</html>

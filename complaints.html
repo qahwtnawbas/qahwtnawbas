@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مكتب الشكاوى |  قهوتنا وبس</title>
+    <meta name="description" content="مكتب الشكاوى والمقترحات لقهوتنا وبس. نحن نستمع إليك لحل أي مشكلة تواجهك فوراً.">
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Tajawal:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. CORE VARIABLES & THEME
+           ========================================================================== */
+        :root {
+            --q-primary: #1B4332; --q-primary-light: #2D6A4F; --q-primary-dark: #081C15;
+            --q-accent: #40916C; --q-gold: hwb(120 66% 8%); --q-white: #ffffff;
+            --q-off-white: #f8fbf9; --q-dark: #111827; --q-gray: #6b7280;
+            --q-danger: #e63946; --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2); --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-main: 'IBM Plex Sans Arabic', sans-serif; --font-heading: 'Tajawal', sans-serif;
+            --trans-fast: 0.3s ease; --trans-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --z-nav: 1000; --z-dropdown: 1010; --z-toast: 9999;
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--q-off-white); }
+        ::-webkit-scrollbar-thumb { background: var(--q-accent); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--q-primary); }
+
+        body { font-family: var(--font-main); background-color: var(--q-off-white); color: var(--q-dark); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 900; }
+        a { text-decoration: none; color: inherit; transition: var(--trans-fast); }
+        ul { list-style: none; }
+        button { font-family: var(--font-main); cursor: pointer; border: none; background: none; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
+
+        /* ==========================================================================
+           3. PRELOADER
+           ========================================================================== */
+        #preloader { position: fixed; inset: 0; background: var(--q-primary-dark); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease; }
+        .loader-cup { width: 80px; height: 80px; border: 4px solid var(--q-gold); border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; animation: floatCup 2s infinite ease-in-out; }
+        .loader-cup::after { content: ''; position: absolute; top: 10px; right: -20px; width: 25px; height: 40px; border: 4px solid var(--q-gold); border-radius: 20px; }
+        .loader-smoke { display: flex; gap: 10px; position: absolute; top: -40px; left: 15px; }
+        .smoke-line { width: 4px; height: 30px; background: rgba(212,163,115,0.6); border-radius: 5px; animation: smokeRise 1.5s infinite ease-in; opacity: 0; }
+        .smoke-line:nth-child(2) { animation-delay: 0.4s; height: 40px; }
+        .smoke-line:nth-child(3) { animation-delay: 0.8s; }
+        @keyframes floatCup { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes smokeRise { 0% { transform: translateY(0) scaleY(1); opacity: 0.8; } 100% { transform: translateY(-30px) scaleY(2); opacity: 0; } }
+        .loader-text { margin-top: 30px; color: var(--q-gold); font-family: var(--font-heading); font-size: 20px; letter-spacing: 2px; }
+
+        /* ==========================================================================
+           4. MEGA HEADER
+           ========================================================================== */
+        .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: var(--z-nav); background: transparent; padding: 25px 0; border-bottom: 1px solid transparent; transition: var(--trans-smooth); }
+        .main-header.scrolled { padding: 10px 0; background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: var(--glass-shadow); border-bottom-color: var(--glass-border); }
+        
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { font-family: var(--font-heading); font-size: 28px; color: var(--q-white); border: 3px solid var(--q-white); padding: 5px 20px; transition: var(--trans-fast); letter-spacing: 1px; }
+        .main-header.scrolled .logo-box { color: var(--q-primary); border-color: var(--q-primary); }
+        .logo-box:hover { background: var(--q-primary); color: var(--q-white) !important; transform: scale(1.05); }
+
+        .nav-menu { display: flex; align-items: center; gap: 35px; }
+        .nav-item { position: relative; font-weight: 700; color: var(--q-white); font-size: 16px; padding: 10px 0; transition: var(--trans-fast); cursor: pointer; }
+        .main-header.scrolled .nav-item { color: var(--q-dark); }
+        .nav-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background: var(--q-gold); transition: var(--trans-fast); border-radius: 5px; }
+        .nav-item:hover::after, .nav-item.active::after { width: 100%; }
+        .nav-item:hover { color: var(--q-gold); }
+        .main-header.scrolled .nav-item:hover, .main-header.scrolled .nav-item.active { color: var(--q-primary); }
+
+        .has-dropdown { display: flex; align-items: center; gap: 8px; }
+        .has-dropdown i { font-size: 10px; transition: 0.3s; }
+        .has-dropdown:hover i { transform: rotate(180deg); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; min-width: 240px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); opacity: 0; visibility: hidden; transform: translateY(15px); transition: var(--trans-smooth); padding: 10px 0; z-index: var(--z-dropdown); display: flex; flex-direction: column; }
+        .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-link { display: flex; align-items: center; gap: 10px; padding: 12px 20px; color: var(--q-dark) !important; font-size: 15px !important; transition: var(--trans-fast); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .dropdown-link:last-child { border-bottom: none; }
+        .dropdown-link:hover { background: rgba(64,145,108,0.08); color: var(--q-primary) !important; padding-right: 30px; }
+
+        .btn-auth { background: var(--q-primary); color: var(--q-white) !important; padding: 12px 28px; border-radius: 8px; font-weight: 800; font-size: 15px; transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(27, 67, 50, 0.3); }
+        .btn-auth:hover { background: var(--q-accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(64,145,108,0.5); }
+
+        /* ==========================================================================
+           10. MOBILE MENU (HAMBURGER)
+           ========================================================================== */
+        .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--q-white); font-size: 28px; cursor: pointer; transition: 0.3s; }
+        .main-header.scrolled .mobile-menu-btn { color: var(--q-primary-dark); }
+
+        .mobile-nav-overlay { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; background: #040d0a; z-index: 10000; padding: 60px 20px; box-shadow: 5px 0 30px rgba(0,0,0,0.8); transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-right: 2px solid var(--q-gold); }
+        .mobile-nav-overlay.active { left: 0; }
+
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; border: none; color: var(--q-white); font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .close-menu-btn:hover { background: var(--q-danger); transform: rotate(90deg); }
+
+        .mobile-logo { color: var(--q-white); font-family: var(--font-heading); font-size: 24px; margin-bottom: 30px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+
+        .mobile-menu-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
+        .mobile-menu-list a { color: #ffffff; font-size: 17px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; transition: 0.3s; background: rgba(255,255,255,0.03); }
+        .mobile-menu-list a i { color: var(--q-gold); width: 20px; text-align: center; }
+        .mobile-menu-list a:hover { background: var(--q-primary); padding-left: 25px; color: var(--q-gold); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none !important; } 
+            .nav-container { position: relative; }
+            .mobile-menu-btn { display: block; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+        }
+
+        /* ==========================================================================
+           5. COMPLAINTS HERO SECTION
+           ========================================================================== */
+        .complaints-hero { position: relative; height: 50vh; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background-color: var(--q-primary-dark); }
+        .complaints-hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat; opacity: 0.25; animation: slowZoom 20s infinite alternate linear; }
+        @keyframes slowZoom { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+        .complaints-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--q-off-white) 0%, transparent 100%); z-index: 2; opacity: 0.9; }
+        
+        .complaints-hero-content { position: relative; z-index: 3; color: var(--q-primary-dark); max-width: 800px; padding: 0 20px; margin-top: 50px; }
+        .complaints-hero-content h1 { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 15px; text-shadow: 0 5px 15px rgba(255,255,255,0.5); }
+        .complaints-hero-content p { font-size: 1.3rem; color: var(--q-gray); font-weight: 600; }
+
+        /* ==========================================================================
+           6. COMPLAINTS FORM SECTION (Glassmorphism UI)
+           ========================================================================== */
+        .complaints-section { padding: 40px 0 120px; position: relative; z-index: 5; }
+        .complaints-card { background: var(--q-white); border-radius: 30px; box-shadow: var(--glass-shadow); padding: 60px; max-width: 800px; margin: -80px auto 0; position: relative; border: 1px solid rgba(0,0,0,0.05); border-top: 5px solid var(--q-danger); }
+        
+        .form-header { text-align: center; margin-bottom: 40px; }
+        .form-header i { font-size: 50px; color: var(--q-danger); margin-bottom: 15px; background: rgba(230,57,70,0.1); width: 100px; height: 100px; display: inline-flex; justify-content: center; align-items: center; border-radius: 50%; }
+        .form-header h2 { font-size: 24px; color: var(--q-primary-dark); }
+
+        /* Form Inputs */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+        .input-group { display: flex; flex-direction: column; text-align: right; }
+        .input-group label { font-size: 14px; color: var(--q-gray); margin-bottom: 10px; font-weight: 600; }
+        .input-group label span { color: var(--q-danger); font-size: 16px; margin-right: 3px; }
+        .input-control { width: 100%; padding: 18px 25px; background: var(--q-off-white); border: 1px solid rgba(0,0,0,0.05); border-radius: 12px; font-size: 16px; font-family: inherit; color: var(--q-dark); transition: var(--trans-fast); }
+        .input-control:focus { background: var(--q-white); border-color: var(--q-danger); box-shadow: 0 0 0 4px rgba(230,57,70,0.1); }
+        textarea.input-control { resize: vertical; min-height: 160px; }
+        
+        .full-width { grid-column: 1 / -1; }
+
+        .btn-submit-complaint { width: 100%; background: var(--q-primary-dark); color: var(--q-white); padding: 20px; border-radius: 15px; font-weight: 900; font-family: var(--font-heading); font-size: 18px; margin-top: 20px; transition: var(--trans-smooth); box-shadow: 0 15px 30px rgba(8,28,21,0.2); border: 2px solid transparent; }
+        .btn-submit-complaint:hover { background: transparent; color: var(--q-primary-dark); border-color: var(--q-primary-dark); transform: translateY(-3px); }
+        .btn-submit-complaint:disabled { background: var(--q-gray); cursor: not-allowed; transform: none; box-shadow: none; border-color: transparent; color: white; }
+
+        .form-msg { text-align: center; margin-top: 25px; padding: 20px; border-radius: 12px; font-weight: 900; font-size: 18px; display: none; font-family: var(--font-heading); letter-spacing: 0.5px; }
+        .msg-success { background: rgba(16, 185, 129, 0.1); color: #059669; border: 2px solid rgba(16, 185, 129, 0.4); }
+        .msg-error { background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 2px solid rgba(239, 68, 68, 0.4); }
+
+        /* ==========================================================================
+           7. FIREBASE NEWSLETTER
+           ========================================================================== */
+        .newsletter-sec { padding: 100px 0; background-color: var(--q-primary); color: var(--q-white); text-align: center; position: relative; overflow: hidden; border-top: 5px solid var(--q-gold); }
+        .nl-bg { position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; }
+        .nl-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+        .nl-icon { font-size: 50px; color: var(--q-gold); margin-bottom: 20px; }
+        .nl-content h2 { font-size: 2.5rem; margin-bottom: 15px; }
+        .nl-content p { font-size: 1.1rem; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+        .nl-form { display: flex; background: var(--q-white); padding: 8px; border-radius: 60px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transition: var(--trans-fast); }
+        .nl-form:focus-within { transform: scale(1.02); }
+        .nl-form input { flex: 1; border: none; padding: 0 30px; font-size: 16px; font-family: inherit; color: var(--q-dark); border-radius: 60px; background: transparent; }
+        .nl-form button { background: var(--q-primary-dark); color: var(--q-white); padding: 18px 40px; border-radius: 50px; font-weight: 900; font-family: var(--font-heading); font-size: 16px; transition: var(--trans-fast); }
+        .nl-form button:hover { background: var(--q-gold); color: var(--q-primary-dark); }
+        
+        /* ==========================================================================
+           8. THE MEGA FOOTER
+           ========================================================================== */
+        .mega-footer { background: #040d0a; color: #9ca3af; padding: 100px 0 0; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 60px; margin-bottom: 60px; }
+        .f-brand h3 { font-size: 32px; color: var(--q-white); margin-bottom: 25px; }
+        .f-brand h3 span { color: var(--q-gold); }
+        .f-brand p { line-height: 1.9; margin-bottom: 30px; font-size: 15px; max-width: 400px; }
+        .socials { display: flex; gap: 15px; }
+        .socials a { width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--q-white); font-size: 18px; transition: var(--trans-fast); }
+        .socials a:hover { background: var(--q-accent); transform: translateY(-5px); }
+        .f-links h4 { color: var(--q-white); font-size: 22px; margin-bottom: 30px; position: relative; display: inline-block; }
+        .f-links h4::after { content: ''; position: absolute; bottom: -10px; right: 0; width: 40px; height: 3px; background: var(--q-gold); }
+        .f-links ul li { margin-bottom: 15px; }
+        .f-links ul a { transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; }
+        .f-links ul a::before { content: '←'; color: var(--q-accent); opacity: 0; transition: 0.3s; transform: translateX(10px); }
+        .f-links ul a:hover { color: var(--q-gold); }
+        .f-links ul a:hover::before { opacity: 1; transform: translateX(0); }
+        .f-contact li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+        .f-contact i { color: var(--q-gold); font-size: 20px; margin-top: 5px; }
+        .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 30px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        
+        .dev-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); transition: var(--trans-fast); }
+        .dev-badge:hover { background: rgba(255,255,255,0.08); border-color: var(--q-accent); box-shadow: 0 0 20px rgba(64,145,108,0.2); }
+        .dev-badge span { font-size: 13px; color: #6b7280; }
+        .dev-badge a { color: var(--q-white); font-weight: 900; font-family: var(--font-heading); letter-spacing: 1px; font-size: 14px; }
+        .dev-badge i { color: var(--q-danger); animation: heartbeat 1.5s infinite; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+        /* ==========================================================================
+           9. RESPONSIVE
+           ========================================================================== */
+        @media (max-width: 992px) { .footer-grid { grid-template-columns: 1fr 1fr; } .form-grid { grid-template-columns: 1fr; } .complaints-card { padding: 40px 30px; } }
+        @media (max-width: 768px) { 
+            .footer-grid { grid-template-columns: 1fr; } 
+            .nl-form { flex-direction: column; background: transparent; box-shadow: none; gap: 15px; } 
+            .nl-form input, .nl-form button { width: 100%; border-radius: 10px; padding: 20px; }
+            .complaints-hero-content h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-box">قهوتنا وبس</a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="mobile-nav-overlay" id="mobileNav">
+                <button class="close-menu-btn" id="closeMenuBtn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="mobile-logo">قهوتنا وبس</div>
+                <ul class="mobile-menu-list">
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                    <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> عنا</a></li>
+                    <li><a href="menu.html"><i class="fa-solid fa-mug-hot"></i> المنيو</a></li>
+                    <li><a href="rating.html"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                    <li><a href="complaints.html" style="color: var(--q-gold); font-weight: 900;"><i class="fa-solid fa-head-side-cough"></i> الشكاوى</a></li>
+                    <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                    <li><a href="location.html"><i class="fa-solid fa-location-dot"></i> الفروع</a></li>
+                    <li><a href="jobs.html"><i class="fa-solid fa-briefcase"></i> التوظيف</a></li>
+                    <li><a href="bingo.html" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> لعبة البينجو</a></li>
+                    <li><a href="login.html"><i class="fa-solid fa-shield-halved"></i> الإدارة</a></li>
+                </ul>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-item">الرئيسية</a></li>
+                    <li><a href="about.html" class="nav-item">عنا</a></li>
+
+                    <li class="nav-item has-dropdown">
+                        <span>المنيو <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-mug-hot"></i> المشروبات الساخنة</a></li>
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-glass-water"></i> المشروبات الباردة</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item has-dropdown active">
+                        <span>خدمات الزبائن <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="rating.html" class="dropdown-link"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                            <li><a href="complaints.html" class="dropdown-link"><i class="fa-solid fa-headset"></i> مكتب الشكاوى</a></li>
+                            <li><a href="contact.html" class="dropdown-link"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li><a href="location.html" class="nav-item">الفروع</a></li>
+                    <li><a href="jobs.html" class="nav-item">التوظيف</a></li>
+                    <li><a href="bingo.html" class="nav-item" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> بينجو</a></li>
+                    
+                    <li>
+                        <a href="login.html" class="btn-auth">
+                            <i class="fa-solid fa-shield-halved"></i> الإدارة المركزية
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="complaints-hero">
+        <div class="complaints-hero-bg"></div>
+        <div class="complaints-overlay"></div>
+        <div class="complaints-hero-content" data-aos="zoom-in" data-aos-duration="1200">
+            <h1>الشكاوى</h1>
+            <p>تأكد انه رح نحل مشكلتك لو شو ما صار </p>
+        </div>
+    </section>
+
+    <section class="complaints-section">
+        <div class="container">
+            <div class="complaints-card" data-aos="fade-up">
+                
+                <div class="form-header">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <h2>نموذج تقديم شكوى رسمية</h2>
+                </div>
+
+                <form id="complaintForm">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>الاسم الكريم <span>*</span></label>
+                            <input type="text" id="cName" class="input-control" placeholder="أدخل اسمك الكامل..." required>
+                        </div>
+                        <div class="input-group">
+                            <label>رقم الهاتف <span>*</span></label>
+                            <input type="tel" id="cPhone" class="input-control" placeholder="07X XXX XXXX" required>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>الفرع الذي حدثت فيه المشكلة <span>*</span></label>
+                            <input type="text" id="cBranch" class="input-control" placeholder="اكتب اسم الفرع أو المنطقة..." required>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>وصف المشكلة بالتفصيل <span>*</span></label>
+                            <textarea id="cDesc" class="input-control" placeholder="يرجى كتابة كافة تفاصيل المشكلة التي واجهتك بوضوح..." required></textarea>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="cSubmit" class="btn-submit-complaint">إرسال الشكوى للإدارة العليا</button>
+                    
+                    <div id="cMsg" class="form-msg"></div>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-sec">
+        <div class="nl-bg"></div>
+        <div class="container nl-content" data-aos="zoom-in">
+            <div class="nl-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <h2>كن على تواصل دائم</h2>
+            <p>انضم إلى قائمتنا البريدية لتصلك العروض الحصرية على مشروباتك المفضلة.</p>
+            <form id="dbEmailForm" class="nl-form">
+                <input type="email" id="dbEmailInput" placeholder="أدخل بريدك الإلكتروني هنا..." required autocomplete="off">
+                <button type="submit" id="dbBtn">تسجيل الإيميل</button>
+            </form>
+            <div id="dbAlert" class="db-msg" style="display:none; margin-top:15px; padding:10px; border-radius:10px;"></div>
+        </div>
+    </section>
+
+    <footer class="mega-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="f-brand" data-aos="fade-up" data-aos-delay="0">
+                    <h3>قهوتنا <span>وبس</span></h3>
+                    <p></p>
+                    <div class="socials">
+                        <a href="contact.html"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-snapchat"></i></a>
+                    </div>
+                </div>
+                
+                <div class="f-links" data-aos="fade-up" data-aos-delay="100">
+                    <h4>تصفح الموقع</h4>
+                    <ul>
+                        <li><a href="index.html">الصفحة الرئيسية</a></li>
+                        <li><a href="menu.html">قائمة المشروبات (المنيو)</a></li>
+                        <li><a href="coffee-beans.html">متجر البن والمعدات</a></li>
+                        <li><a href="bingo.html">لعبة البينجو وكوبونات الخصم</a></li>
+                    </ul>
+                </div>
+                
+                <div class="f-links" data-aos="fade-up" data-aos-delay="200">
+                    <h4>الإدارة والخدمات</h4>
+                    <ul>
+                        <li><a href="jobs.html">بوابة التوظيف الموحدة</a></li>
+                        <li><a href="rating.html">تقييم جودة الخدمة</a></li>
+                        <li><a href="complaints.html">مكتب معالجة الشكاوى</a></li>
+                        <li><a href="login.html" onclick="launchSecureAdminVault(); return false;" style="color: var(--q-gold);">دخول الإدارة المركزية</a></li>
+                    </ul>
+                </div>
+                
+                
+            </div>
+
+            <div class="f-bottom">
+                <div class="copyright-text">&copy; 2026 جميع الحقوق محفوظة لعلامة "قهوتنا وبس" التجارية.</div>
+                
+                <div class="dev-badge">
+                    <span>System Engineered with <i class="fa-solid fa-heart"></i> by</span>
+                    <a href="#" target="_blank">KARAM GHANDI</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+     <script>
+        // --- إعدادات كرم غاندي المصلحة ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBQLp5FeHaP3vcJfuY22DtGu48j0fyveb0", 
+            authDomain: "qahwtna-b65ca.firebaseapp.com",
+            projectId: "qahwtna-b65ca" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // UI Logic
+        AOS.init({ once: true });
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('preloader');
+            setTimeout(() => { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 600); }, 500);
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // --- تشغيل قائمة الموبايل (البرجر) ---
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeMenuBtn');
+
+        if (mobileBtn && mobileNav) {
+            mobileBtn.addEventListener('click', () => { mobileNav.classList.add('active'); });
+        }
+        if (closeBtn && mobileNav) {
+            closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
+        }
+        document.addEventListener('click', (e) => {
+            if (mobileNav && mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && !mobileBtn.contains(e.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // --- تصليح إرسال الشكوى + منع التكرار ---
+        document.getElementById('complaintForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('cSubmit');
+            const msg = document.getElementById('cMsg');
+            
+            // 🔥 منع العميل من إرسال شكوى ثانية من نفس الجهاز
+            if (localStorage.getItem('qahwa_has_complained')) {
+                msg.className = "form-msg msg-error";
+                msg.innerHTML = "لقد قمت بإرسال شكوى مسبقاً، سيتم التواصل معك قريباً.";
+                msg.style.display = "block";
+                return;
+            }
+
+            btn.innerHTML = 'جاري توثيق الشكوى... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                // التصليح هون: غيرنا "complaints" لـ "complaint" (المفرد) عشان تطابق اللوحة عندك
+                await db.collection("complaint").add({
+                    name: document.getElementById('cName').value,
+                    phone: document.getElementById('cPhone').value,
+                    branch: document.getElementById('cBranch').value,
+                    message: document.getElementById('cDesc').value, // سميناه message عشان اللوحة تعرضه صح
+                    time: Date.now()
+                });
+                
+                // 🔥 توثيق إرسال الشكوى بالذاكرة عشان ما يرسل مرة ثانية
+                localStorage.setItem('qahwa_has_complained', 'true');
+                
+                msg.className = "form-msg msg-success";
+                msg.innerHTML = "تأكد من أن مشكلتك ستحل مهما كلف الأمر.";
+                msg.style.display = "block";
+                document.getElementById('complaintForm').reset();
+
+            } catch (error) {
+                console.error(error);
+                msg.className = "form-msg msg-error";
+                msg.innerHTML = "حدث خطأ بالاتصال. تأكد من إعدادات الـ Rules في Firebase.";
+                msg.style.display = "block";
+            } finally {
+                btn.innerHTML = 'إرسال الشكوى للإدارة العليا';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>فروعنا | قهوتنا وبس</title>
+    <meta name="description" content="اكتشف أقرب فرع لقهوتنا وبس إليك. احصل على الاتجاهات المباشرة عبر خرائط جوجل واستمتع بقهوتك.">
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Tajawal:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. CORE VARIABLES & THEME
+           ========================================================================== */
+        :root {
+            --q-primary: #1B4332; --q-primary-light: #2D6A4F; --q-primary-dark: #081C15;
+            --q-accent: #40916C; --q-gold: hwb(120 66% 8%); --q-white: #ffffff;
+            --q-off-white: #f8fbf9; --q-dark: #111827; --q-gray: #6b7280;
+            --q-danger: #e63946; --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2); --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-main: 'IBM Plex Sans Arabic', sans-serif; --font-heading: 'Tajawal', sans-serif;
+            --trans-fast: 0.3s ease; --trans-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --z-nav: 1000; --z-dropdown: 1010;
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--q-off-white); }
+        ::-webkit-scrollbar-thumb { background: var(--q-accent); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--q-primary); }
+
+        body { font-family: var(--font-main); background-color: var(--q-off-white); color: var(--q-dark); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 900; }
+        a { text-decoration: none; color: inherit; transition: var(--trans-fast); }
+        ul { list-style: none; }
+        button { font-family: var(--font-main); cursor: pointer; border: none; background: none; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
+
+        /* ==========================================================================
+           3. PRELOADER & SKELETONS (ANTI-FLASHBACK)
+           ========================================================================== */
+        #preloader { position: fixed; inset: 0; background: var(--q-primary-dark); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease; }
+        .loader-cup { width: 80px; height: 80px; border: 4px solid var(--q-gold); border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; animation: floatCup 2s infinite ease-in-out; }
+        .loader-cup::after { content: ''; position: absolute; top: 10px; right: -20px; width: 25px; height: 40px; border: 4px solid var(--q-gold); border-radius: 20px; }
+        .loader-smoke { display: flex; gap: 10px; position: absolute; top: -40px; left: 15px; }
+        .smoke-line { width: 4px; height: 30px; background: rgba(212,163,115,0.6); border-radius: 5px; animation: smokeRise 1.5s infinite ease-in; opacity: 0; }
+        .smoke-line:nth-child(2) { animation-delay: 0.4s; height: 40px; }
+        .smoke-line:nth-child(3) { animation-delay: 0.8s; }
+        @keyframes floatCup { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes smokeRise { 0% { transform: translateY(0) scaleY(1); opacity: 0.8; } 100% { transform: translateY(-30px) scaleY(2); opacity: 0; } }
+        .loader-text { margin-top: 30px; color: var(--q-gold); font-family: var(--font-heading); font-size: 20px; letter-spacing: 2px; }
+
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* ==========================================================================
+           4. MEGA HEADER
+           ========================================================================== */
+        .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: var(--z-nav); background: transparent; padding: 25px 0; border-bottom: 1px solid transparent; transition: var(--trans-smooth); }
+        .main-header.scrolled { padding: 10px 0; background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: var(--glass-shadow); border-bottom-color: var(--glass-border); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { font-family: var(--font-heading); font-size: 28px; color: var(--q-white); border: 3px solid var(--q-white); padding: 5px 20px; transition: var(--trans-fast); letter-spacing: 1px; }
+        .main-header.scrolled .logo-box { color: var(--q-primary); border-color: var(--q-primary); }
+        .logo-box:hover { background: var(--q-primary); color: var(--q-white) !important; transform: scale(1.05); }
+
+        .nav-menu { display: flex; align-items: center; gap: 35px; }
+        .nav-item { position: relative; font-weight: 700; color: var(--q-white); font-size: 16px; padding: 10px 0; transition: var(--trans-fast); cursor: pointer; }
+        .main-header.scrolled .nav-item { color: var(--q-dark); }
+        .nav-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background: var(--q-gold); transition: var(--trans-fast); border-radius: 5px; }
+        .nav-item:hover::after, .nav-item.active::after { width: 100%; }
+        .nav-item:hover { color: var(--q-gold); }
+        .main-header.scrolled .nav-item:hover, .main-header.scrolled .nav-item.active { color: var(--q-primary); }
+
+        .has-dropdown { display: flex; align-items: center; gap: 8px; }
+        .has-dropdown i { font-size: 10px; transition: 0.3s; }
+        .has-dropdown:hover i { transform: rotate(180deg); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; min-width: 240px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); opacity: 0; visibility: hidden; transform: translateY(15px); transition: var(--trans-smooth); padding: 10px 0; z-index: var(--z-dropdown); display: flex; flex-direction: column; }
+        .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-link { display: flex; align-items: center; gap: 10px; padding: 12px 20px; color: var(--q-dark) !important; font-size: 15px !important; transition: var(--trans-fast); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .dropdown-link:hover { background: rgba(64,145,108,0.08); color: var(--q-primary) !important; padding-right: 30px; }
+
+        .btn-auth { background: var(--q-primary); color: var(--q-white) !important; padding: 12px 28px; border-radius: 8px; font-weight: 800; font-size: 15px; transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(27, 67, 50, 0.3); }
+
+        /* ==========================================================================
+           5. MOBILE MENU (HAMBURGER)
+           ========================================================================== */
+        .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--q-white); font-size: 28px; cursor: pointer; transition: 0.3s; }
+        .main-header.scrolled .mobile-menu-btn { color: var(--q-primary-dark); }
+        .mobile-nav-overlay { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; background: #040d0a; z-index: 10000; padding: 60px 20px; box-shadow: 5px 0 30px rgba(0,0,0,0.8); transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-right: 2px solid var(--q-gold); }
+        .mobile-nav-overlay.active { left: 0; }
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; border: none; color: var(--q-white); font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .close-menu-btn:hover { background: var(--q-danger); transform: rotate(90deg); }
+        .mobile-logo { color: var(--q-white); font-family: var(--font-heading); font-size: 24px; margin-bottom: 30px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .mobile-menu-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
+        .mobile-menu-list a { color: #ffffff; font-size: 17px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; transition: 0.3s; background: rgba(255,255,255,0.03); }
+        .mobile-menu-list a i { color: var(--q-gold); width: 20px; text-align: center; }
+        .mobile-menu-list a:hover { background: var(--q-primary); padding-left: 25px; color: var(--q-gold); }
+
+        /* ==========================================================================
+           6. LOCATIONS HERO SECTION
+           ========================================================================== */
+        .location-hero { position: relative; height: 50vh; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background-color: var(--q-primary-dark); }
+        .location-hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1974&auto=format&fit=crop') center/cover no-repeat; opacity: 0.3; animation: slowZoom 20s infinite alternate linear; }
+        @keyframes slowZoom { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+        .location-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--q-off-white) 0%, transparent 100%); z-index: 2; opacity: 0.9; }
+        
+        .location-hero-content { position: relative; z-index: 3; color: var(--q-primary-dark); max-width: 800px; padding: 0 20px; margin-top: 50px; }
+        .location-hero-content h1 { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 15px; text-shadow: 0 5px 15px rgba(255,255,255,0.5); }
+        .location-hero-content p { font-size: 1.3rem; color: var(--q-gray); font-weight: 600; }
+
+        /* ==========================================================================
+           7. SEARCH ENGINE & BRANCHES DYNAMIC GRID
+           ========================================================================== */
+        .branches-section { padding: 40px 0 120px; position: relative; z-index: 5; margin-top: -30px; }
+        
+        /* شريط البحث الذكي */
+        .search-container { position: relative; max-width: 700px; margin: 0 auto 50px; }
+        .search-input { width: 100%; padding: 20px 55px 20px 25px; border-radius: 50px; border: 2px solid rgba(27,67,50,0.1); font-size: 16px; font-family: inherit; transition: var(--trans-fast); box-shadow: 0 15px 35px rgba(0,0,0,0.05); outline: none; background: var(--q-white); color: var(--q-dark); }
+        .search-input:focus { border-color: var(--q-gold); box-shadow: 0 15px 35px rgba(212,163,115,0.2); }
+        .search-icon { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); color: var(--q-gray); font-size: 20px; transition: var(--trans-fast); pointer-events: none; }
+        .search-input:focus + .search-icon { color: var(--q-gold); }
+
+        .branches-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+        
+        .branch-card { background: var(--q-white); border-radius: 20px; padding: 40px; box-shadow: var(--glass-shadow); position: relative; overflow: hidden; border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: var(--trans-smooth); animation: fadeIn 0.6s ease-out; height: 100%; min-height: 350px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .branch-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(212,163,115,0.15); border-color: rgba(64,145,108,0.2); }
+        
+        .branch-icon { width: 65px; height: 65px; background: rgba(212,163,115,0.15); color: var(--q-gold); border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 28px; margin-bottom: 25px; transition: var(--trans-fast); flex-shrink: 0; }
+        .branch-card:hover .branch-icon { background: var(--q-primary); color: var(--q-white); transform: scale(1.1) rotate(-10deg); box-shadow: 0 10px 20px rgba(27,67,50,0.2); }
+        
+        .branch-title { font-size: 26px; color: var(--q-primary-dark); margin-bottom: 15px; font-weight: 900; }
+        .branch-desc { color: var(--q-gray); font-size: 15px; line-height: 1.8; margin-bottom: 35px; flex-grow: 1; }
+        
+        .btn-go-branch { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--q-off-white); color: var(--q-primary); padding: 18px 25px; border-radius: 12px; font-weight: 800; font-family: var(--font-heading); font-size: 16px; border: 1px solid rgba(27,67,50,0.1); transition: var(--trans-smooth); text-decoration: none; width: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.02); margin-top: auto; }
+        .btn-go-branch i { font-size: 18px; transition: 0.3s; }
+        .btn-go-branch:hover { background: var(--q-primary); color: var(--q-white); border-color: var(--q-primary); box-shadow: 0 10px 25px rgba(27,67,50,0.2); }
+        .btn-go-branch:hover i { transform: translateX(-5px); }
+
+        .empty-branches { grid-column: 1 / -1; background: rgba(27,67,50,0.05); color: var(--q-primary); padding: 50px; text-align: center; border-radius: 20px; font-weight: bold; font-size: 18px; border: 1px dashed rgba(27,67,50,0.3); }
+
+        /* ==========================================================================
+           8. FIREBASE NEWSLETTER
+           ========================================================================== */
+        .newsletter-sec { padding: 100px 0; background-color: var(--q-primary); color: var(--q-white); text-align: center; position: relative; overflow: hidden; border-top: 5px solid var(--q-gold); }
+        .nl-bg { position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; }
+        .nl-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+        .nl-icon { font-size: 50px; color: var(--q-gold); margin-bottom: 20px; }
+        .nl-content h2 { font-size: 2.5rem; margin-bottom: 15px; }
+        .nl-form { display: flex; background: var(--q-white); padding: 8px; border-radius: 60px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transition: var(--trans-fast); margin-top: 30px; }
+        .nl-form input { flex: 1; border: none; padding: 0 30px; font-size: 16px; font-family: inherit; color: var(--q-dark); border-radius: 60px; background: transparent; }
+        .nl-form button { background: var(--q-primary-dark); color: var(--q-white); padding: 18px 40px; border-radius: 50px; font-weight: 900; font-family: var(--font-heading); font-size: 16px; cursor: pointer; transition: 0.3s;}
+        .nl-form button:hover { background: var(--q-gold); color: var(--q-primary-dark); }
+
+        /* ==========================================================================
+           9. THE MEGA FOOTER
+           ========================================================================== */
+        .mega-footer { background: #040d0a; color: #9ca3af; padding: 100px 0 0; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 60px; margin-bottom: 60px; }
+        .f-brand h3 { font-size: 32px; color: var(--q-white); margin-bottom: 25px; }
+        .f-brand h3 span { color: var(--q-gold); }
+        .f-brand p { line-height: 1.9; margin-bottom: 30px; font-size: 15px; max-width: 400px; }
+        .socials { display: flex; gap: 15px; }
+        .socials a { width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--q-white); font-size: 18px; transition: var(--trans-fast); }
+        .socials a:hover { background: var(--q-accent); transform: translateY(-5px); }
+        .f-links h4 { color: var(--q-white); font-size: 22px; margin-bottom: 30px; position: relative; display: inline-block; }
+        .f-links h4::after { content: ''; position: absolute; bottom: -10px; right: 0; width: 40px; height: 3px; background: var(--q-gold); }
+        .f-links ul li { margin-bottom: 15px; }
+        .f-links ul a { transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; }
+        .f-links ul a:hover { color: var(--q-gold); }
+        .f-contact li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+        .f-contact i { color: var(--q-gold); font-size: 20px; margin-top: 5px; }
+        .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 30px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .dev-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); transition: var(--trans-fast); }
+        .dev-badge a { color: var(--q-white); font-weight: 900; font-family: var(--font-heading); letter-spacing: 1px; font-size: 14px; }
+
+        /* ==========================================================================
+           10. RESPONSIVE
+           ========================================================================== */
+        @media (max-width: 992px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 768px) { 
+            .nav-menu { display: none !important; } 
+            .nav-container { position: relative; }
+            .mobile-menu-btn { display: block; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+            
+            .footer-grid { grid-template-columns: 1fr; } 
+            .location-hero-content h1 { font-size: 2.5rem; }
+            .branches-grid { grid-template-columns: 1fr; }
+            .nl-form { flex-direction: column; background: transparent; box-shadow: none; gap: 15px; } 
+            .nl-form input, .nl-form button { width: 100%; border-radius: 10px; padding: 20px; background: var(--q-white);}
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <header class="main-header" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-box">قهوتنا وبس</a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="mobile-nav-overlay" id="mobileNav">
+                <button class="close-menu-btn" id="closeMenuBtn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="mobile-logo">قهوتنا وبس</div>
+                <ul class="mobile-menu-list">
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                    <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> عنا</a></li>
+                    <li><a href="menu.html"><i class="fa-solid fa-mug-hot"></i> المنيو</a></li>
+                    <li><a href="rating.html"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                    <li><a href="complaints.html"><i class="fa-solid fa-head-side-cough"></i> الشكاوى</a></li>
+                    <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                    <li><a href="location.html" style="color: var(--q-gold); font-weight: 900;"><i class="fa-solid fa-location-dot"></i> الفروع</a></li>
+                    <li><a href="jobs.html"><i class="fa-solid fa-briefcase"></i> التوظيف</a></li>
+                    <li><a href="bingo.html" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> لعبة البينجو</a></li>
+                    <li><a href="login.html"><i class="fa-solid fa-shield-halved"></i> الإدارة</a></li>
+                </ul>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-item">الرئيسية</a></li>
+                    <li><a href="about.html" class="nav-item">عنا</a></li>
+                    <li class="nav-item has-dropdown">
+                        <span>المنيو <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-mug-hot"></i> المشروبات الساخنة</a></li>
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-glass-water"></i> المشروبات الباردة</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item has-dropdown">
+                        <span>خدمات الزبائن <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="rating.html" class="dropdown-link"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                            <li><a href="complaints.html" class="dropdown-link"><i class="fa-solid fa-headset"></i> مكتب الشكاوى</a></li>
+                            <li><a href="contact.html" class="dropdown-link"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="location.html" class="nav-item active">الفروع</a></li>
+                    <li><a href="jobs.html" class="nav-item">التوظيف</a></li>
+                    <li><a href="bingo.html" class="nav-item" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> بينجو</a></li>
+                    <li>
+                        <a href="login.html" class="btn-auth">
+                            <i class="fa-solid fa-shield-halved"></i> الإدارة المركزية
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="location-hero">
+        <div class="location-hero-bg"></div>
+        <div class="location-overlay"></div>
+        <div class="location-hero-content" data-aos="zoom-in" data-aos-duration="1200">
+            <h1>فروعنا</h1>
+            <p>تعال عنا ، هسا هسا هسا ؟!</p>
+        </div>
+    </section>
+
+    <section class="branches-section">
+        <div class="container">
+            
+            <div class="search-container" data-aos="fade-up">
+                <input type="text" id="branchSearchInput" class="search-input" placeholder="ابحث عن اسم الفرع، المدينة، أو الوصف...">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </div>
+
+            <div class="branches-grid" id="db-branches-container">
+                </div>
+        </div>
+    </section>
+
+    <section class="newsletter-sec">
+        <div class="nl-bg"></div>
+        <div class="container nl-content" data-aos="zoom-in">
+            <div class="nl-icon"><i class="fa-solid fa-bell-concierge"></i></div>
+            <h2>اشترك ليصلك أخبار افتتاح فروعنا الجديدة</h2>
+            <form id="dbEmailForm" class="nl-form">
+                <input type="email" id="dbEmailInput" placeholder="أدخل بريدك الإلكتروني هنا..." required autocomplete="off">
+                <button type="submit" id="dbBtn">اشتراك</button>
+            </form>
+            <div id="dbAlert" style="display:none; margin-top:15px; color:#fff; font-weight:bold; padding:10px; border-radius:10px;"></div>
+        </div>
+    </section>
+
+    <footer class="mega-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="f-brand">
+                    <h3>قهوتنا <span>وبس</span></h3>
+                    <p></p>
+                    <div class="socials">
+                        <a href="contact.html"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-snapchat"></i></a>
+                    </div>
+                </div>
+                <div class="f-links">
+                    <h4>تصفح الموقع</h4>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="menu.html">المنيو المباشر</a></li>
+                        <li><a href="bingo.html">لعبة البينجو</a></li>
+                    </ul>
+                </div>
+                <div class="f-links">
+                    <h4>الإدارة والخدمات</h4>
+                    <ul>
+                        <li><a href="jobs.html">التوظيف</a></li>
+                        <li><a href="complaints.html">مكتب الشكاوى</a></li>
+                        <li><a href="login.html" style="color: var(--q-gold);">دخول الإدارة المركزية</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="f-bottom">
+                <div class="copyright-text">&copy; 2026 جميع الحقوق محفوظة لعلامة "قهوتنا وبس".</div>
+                <div class="dev-badge">
+                    <span>System Engineered with <i class="fa-solid fa-heart" style="color:var(--q-danger);"></i> by</span>
+                    <a href="#">KARAM GHANDI</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="database.js"></script>
+
+    <script>
+        // --- 1. إزالة Preloader ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 600);
+            }, 800);
+        });
+
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // --- 2. MOBILE MENU LOGIC (HAMBURGER) ---
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeMenuBtn');
+
+        if (mobileBtn && mobileNav) {
+            mobileBtn.addEventListener('click', () => { mobileNav.classList.add('active'); });
+        }
+        if (closeBtn && mobileNav) {
+            closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
+        }
+        document.addEventListener('click', (e) => {
+            if (mobileNav && mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && !mobileBtn.contains(e.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // --- 3. محرك الجلب الديناميكي والبحث للفروع ---
+        let allBranchesArray = []; // مصفوفة لتخزين الفروع للبحث السريع
+
+        async function fetchBranches() {
+            const container = document.getElementById('db-branches-container');
+            
+            // حقن هياكل التحميل (Skeletons)
+            let skeletonsHTML = '';
+            for(let i=0; i<3; i++) {
+                skeletonsHTML += `
+                <div class="branch-card" style="pointer-events:none;">
+                    <div class="skeleton" style="width: 65px; height: 65px; border-radius: 15px; margin-bottom: 25px;"></div>
+                    <div class="skeleton" style="width: 60%; height: 26px; margin-bottom: 15px;"></div>
+                    <div class="skeleton" style="width: 100%; height: 15px; margin-bottom: 10px;"></div>
+                    <div class="skeleton" style="width: 80%; height: 15px; margin-bottom: 35px;"></div>
+                    <div class="skeleton" style="width: 100%; height: 50px; border-radius: 12px; margin-top: auto;"></div>
+                </div>`;
+            }
+            container.innerHTML = skeletonsHTML;
+
+            try {
+                const snapshot = await db.collection("branches").get();
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="empty-branches"><i class="fa-solid fa-shop-slash" style="font-size:30px; margin-bottom:15px; display:block;"></i> لم تقم الإدارة بإضافة مواقع الفروع بعد.</div>';
+                    return;
+                }
+
+                allBranchesArray = []; // تصفير المصفوفة
+                snapshot.forEach(doc => {
+                    allBranchesArray.push({ id: doc.id, ...doc.data() });
+                });
+                
+                renderBranches(allBranchesArray);
+
+            } catch (error) {
+                console.error("Firebase Sync Error:", error);
+                container.innerHTML = '<div class="empty-branches" style="color:#ef4444; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.05);"><i class="fa-solid fa-triangle-exclamation" style="font-size:30px; margin-bottom:15px; display:block;"></i> حدث خطأ في الاتصال بالسحابة.</div>';
+            }
+        }
+
+        // دالة مساعدة لطباعة الفروع (عشان نستخدمها بالبحث كمان)
+        function renderBranches(branchesToRender) {
+            const container = document.getElementById('db-branches-container');
+            
+            if (branchesToRender.length === 0) {
+                container.innerHTML = '<div class="empty-branches"><i class="fa-solid fa-search" style="font-size:30px; margin-bottom:15px; display:block;"></i> عذراً، لم نجد أي فرع يطابق كلمة البحث.</div>';
+                return;
+            }
+
+            let html = '';
+            branchesToRender.forEach((branch, index) => {
+                html += `
+                    <div class="branch-card" style="animation-delay: ${index * 0.05}s">
+                        <div class="branch-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <h3 class="branch-title">${branch.name || 'بدون اسم'}</h3>
+                        <p class="branch-desc">${branch.desc || 'لا يوجد وصف'}</p>
+                        <a href="${branch.link || '#'}" target="_blank" class="btn-go-branch">
+                            <i class="fa-solid fa-arrow-left"></i> الذهاب إلى الفرع
+                        </a>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // تشغيل الجلب عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', fetchBranches);
+
+        // --- 4. تشغيل محرك البحث ---
+        document.getElementById('branchSearchInput').addEventListener('input', (e) => {
+            const searchQuery = e.target.value.toLowerCase().trim();
+            
+            // فلترة المصفوفة الأصلية
+            const filteredBranches = allBranchesArray.filter(branch => {
+                const branchName = branch.name ? branch.name.toLowerCase() : '';
+                const branchDesc = branch.desc ? branch.desc.toLowerCase() : '';
+                
+                return branchName.includes(searchQuery) || branchDesc.includes(searchQuery);
+            });
+            
+            // إعادة رسم الفروع المطابقة
+            renderBranches(filteredBranches);
+        });
+
+        // --- 5. النشرة البريدية ---
+        document.getElementById('dbEmailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('dbBtn');
+            const box = document.getElementById('dbAlert');
+            const input = document.getElementById('dbEmailInput');
+            
+            btn.innerHTML = 'جاري التوثيق... <i class="fa-solid fa-spinner fa-spin"></i>'; 
+            btn.disabled = true;
+            
+            try {
+                await db.collection("newsletter").add({ 
+                    email: input.value.trim(), 
+                    page: "Locations", 
+                    registeredAt: firebase.firestore.FieldValue.serverTimestamp() 
+                });
+                box.innerHTML = "تم التسجيل بنجاح. ترقب أخبار فروعنا!"; 
+                box.style.background = "rgba(16, 185, 129, 0.2)"; box.style.border = "1px solid #10b981"; box.style.display = "block"; 
+                input.value = '';
+            } catch (error) { 
+                box.innerHTML = "حدث خطأ بالاتصال بالسحابة."; 
+                box.style.background = "rgba(239, 68, 68, 0.2)"; box.style.border = "1px solid #ef4444"; box.style.display = "block"; 
+            } finally { 
+                btn.innerHTML = 'اشتراك'; btn.disabled = false; 
+                setTimeout(() => box.style.display = "none", 5000); 
+            }
+        });
+    </script>
+</body>
+</html>

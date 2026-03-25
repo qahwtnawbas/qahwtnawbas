@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>قهوتنا وبس | الرئيسية</title>
+    
+    <meta name="description" content="الموقع الرسمي لقهوتنا وبس - تجربة القهوة المختصة الأفضل في الأردن.">
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;300;400;500;600;700;800&family=Tajawal:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. CORE VARIABLES & THEME (التطابق الجيني للألوان)
+           ========================================================================== */
+        :root {
+            --q-primary: #1B4332; 
+            --q-primary-light: #2D6A4F; 
+            --q-primary-dark: #081C15;
+            --q-accent: #40916C; 
+            --q-gold: hwb(120 66% 8%); 
+            --q-gold-alt: #d4a373;
+            --q-white: #ffffff;
+            --q-off-white: #f8fbf9; 
+            --q-dark: #111827; 
+            --q-gray: #6b7280;
+            --q-light-gray: #e5e7eb;
+            --q-danger: #e63946; 
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2); 
+            --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-main: 'IBM Plex Sans Arabic', sans-serif; 
+            --font-heading: 'Tajawal', sans-serif;
+            --trans-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --z-nav: 1000;
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET & SCROLLBAR
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--q-primary-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--q-gold); border-radius: 5px; }
+
+        body { 
+            font-family: var(--font-main); 
+            background-color: var(--q-off-white); 
+            color: var(--q-dark); 
+            line-height: 1.7; 
+            overflow-x: hidden; 
+            scroll-behavior: smooth; 
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 900; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
+
+        /* ==========================================================================
+           3. CINEMATIC PRELOADER
+           ========================================================================== */
+        #preloader { position: fixed; inset: 0; background: var(--q-primary-dark); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .cup-anim { width: 80px; height: 80px; border: 4px solid var(--q-gold); border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; animation: floatCup 2s infinite; }
+        .cup-anim::after { content: ''; position: absolute; top: 10px; right: -22px; width: 22px; height: 35px; border: 4px solid var(--q-gold); border-radius: 10px; }
+        @keyframes floatCup { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .load-text { margin-top: 30px; color: var(--q-gold); font-family: var(--font-heading); font-size: 20px; letter-spacing: 3px; font-weight: 900; }
+
+        /* ==========================================================================
+           4. MEGA NAVIGATION BAR (IDENTICAL)
+           ========================================================================== */
+        .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: var(--z-nav); background: transparent; padding: 25px 0; border-bottom: 1px solid transparent; transition: var(--trans-smooth); }
+        .main-header.scrolled { padding: 12px 0; background: var(--glass-bg); backdrop-filter: blur(25px); box-shadow: var(--glass-shadow); border-bottom-color: var(--glass-border); }
+        
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { font-family: var(--font-heading); font-size: 28px; color: var(--q-white); border: 3px solid var(--q-white); padding: 5px 20px; transition: 0.3s; letter-spacing: 1px; }
+        .main-header.scrolled .logo-box { color: var(--q-primary); border-color: var(--q-primary); }
+        .logo-box:hover { background: var(--q-primary); color: var(--q-white) !important; transform: scale(1.05); }
+
+        .nav-menu { display: flex; align-items: center; gap: 30px; }
+        .nav-item { position: relative; font-weight: 700; color: var(--q-white); font-size: 15px; padding: 10px 0; transition: 0.3s; }
+        .main-header.scrolled .nav-item { color: var(--q-dark); }
+        .nav-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background: var(--q-gold); transition: 0.3s; border-radius: 5px; }
+        .nav-item:hover::after, .nav-item.active::after { width: 100%; }
+        
+        .has-dropdown { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; min-width: 220px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; opacity: 0; visibility: hidden; transform: translateY(15px); transition: 0.4s; padding: 10px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-link { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--q-dark) !important; font-size: 14px; }
+        .dropdown-link:hover { background: rgba(64,145,108,0.1); color: var(--q-primary) !important; padding-right: 30px; }
+
+        .btn-auth { background: var(--q-primary); color: var(--q-white) !important; padding: 12px 25px; border-radius: 8px; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(27,67,50,0.3); }
+
+        /* ==========================================================================
+           10. MOBILE MENU (HAMBURGER)
+           ========================================================================== */
+        .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--q-white); font-size: 28px; cursor: pointer; transition: 0.3s; }
+        .main-header.scrolled .mobile-menu-btn { color: var(--q-primary-dark); }
+
+        .mobile-nav-overlay { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; background: #040d0a; z-index: 10000; padding: 60px 20px; box-shadow: 5px 0 30px rgba(0,0,0,0.8); transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-right: 2px solid var(--q-gold); }
+        .mobile-nav-overlay.active { left: 0; }
+
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; border: none; color: var(--q-white); font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .close-menu-btn:hover { background: var(--q-danger); transform: rotate(90deg); }
+
+        .mobile-logo { color: var(--q-white); font-family: var(--font-heading); font-size: 24px; margin-bottom: 30px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+
+        .mobile-menu-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
+        .mobile-menu-list a { color: #ffffff; font-size: 17px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; transition: 0.3s; background: rgba(255,255,255,0.03); }
+        .mobile-menu-list a i { color: var(--q-gold); width: 20px; text-align: center; }
+        .mobile-menu-list a:hover { background: var(--q-primary); padding-left: 25px; color: var(--q-gold); }
+
+        /* ==========================================================================
+           5. HERO SLIDER
+           ========================================================================== */
+        .hero-slider { position: relative; height: 100vh; overflow: hidden; background: #000; }
+        .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; transform: scale(1.1); }
+        .slide.active { opacity: 1; transform: scale(1); z-index: 10; }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(8,28,21,0.95) 0%, rgba(27,67,50,0.4) 100%); }
+        
+        .hero-content { position: relative; z-index: 20; max-width: 900px; color: #fff; padding-right: 5%; }
+        .hero-content h1 { font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.1; margin-bottom: 25px; }
+        .hero-content h1 span { color: var(--q-gold); text-shadow: 0 0 20px rgba(212,163,115,0.4); }
+        .hero-content p { font-size: 1.3rem; color: #e5e7eb; margin-bottom: 45px; max-width: 650px; font-weight: 300; border-right: 4px solid var(--q-gold); padding-right: 20px; }
+        
+        .hero-btns { display: flex; gap: 20px; }
+        .btn-xl { padding: 18px 45px; border-radius: 50px; font-weight: 900; font-family: var(--font-heading); font-size: 18px; text-decoration: none; transition: 0.3s; }
+        .btn-xl-gold { background: var(--q-gold); color: var(--q-primary-dark); }
+        .btn-xl-outline { border: 2px solid #fff; color: #fff; }
+        .btn-xl:hover { transform: translateY(-5px); }
+
+        /* ==========================================================================
+           6. THE MIDDLE SECTIONS
+           ========================================================================== */
+        .phil-section { padding: 120px 0; background: var(--q-white); }
+        .phil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
+        .phil-img { border-radius: 40px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.1); position: relative; }
+        .phil-img img { width: 100%; transition: 0.8s; }
+        .phil-img:hover img { transform: scale(1.05); }
+        .phil-badge { position: absolute; bottom: 30px; right: 30px; background: var(--q-primary); color: #fff; padding: 20px; border-radius: 20px; font-weight: 900; text-align: center; }
+
+        .phil-text h2 { font-size: 3.5rem; color: var(--q-primary); margin-bottom: 30px; line-height: 1.2; }
+        .phil-text p { font-size: 1.15rem; color: var(--q-gray); margin-bottom: 25px; text-align: justify; }
+        .phil-quote { background: var(--q-off-white); padding: 30px; border-right: 8px solid var(--q-gold); margin: 40px 0; font-style: italic; font-weight: 700; color: var(--q-primary-dark); }
+
+        .services-section { padding: 120px 0; background: var(--q-off-white); }
+        .sec-header { text-align: center; margin-bottom: 80px; }
+        .sec-header h2 { font-size: 3.5rem; color: var(--q-primary-dark); margin-bottom: 20px; }
+        .sec-header .gold-line { width: 100px; height: 6px; background: var(--q-gold); margin: 0 auto; border-radius: 10px; }
+
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
+        .s-card { background: var(--q-white); border-radius: 30px; padding: 60px 40px; box-shadow: var(--glass-shadow); border: 1px solid rgba(0,0,0,0.02); transition: 0.5s; text-align: center; position: relative; overflow: hidden; }
+        .s-card:hover { transform: translateY(-15px); border-color: var(--q-gold); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+        .s-card i { font-size: 55px; color: var(--q-gold); margin-bottom: 30px; display: block; transition: 0.4s; }
+        .s-card:hover i { transform: rotateY(360deg); }
+        .s-card h3 { font-size: 24px; color: var(--q-primary); margin-bottom: 20px; }
+        .s-card p { color: var(--q-gray); font-size: 15px; margin-bottom: 25px; line-height: 1.8; }
+        
+        .lab-section { padding: 120px 0; background: var(--q-primary-dark); color: #fff; }
+        .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 50px; }
+        .step-box { padding: 40px; background: rgba(255,255,255,0.03); border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
+        .step-num { font-size: 5rem; font-weight: 900; color: rgba(212,163,115,0.1); position: absolute; top: 10px; left: 20px; }
+        .step-box h3 { font-size: 22px; color: var(--q-gold); margin-bottom: 15px; position: relative; z-index: 2; }
+        .step-box p { font-size: 14px; opacity: 0.8; position: relative; z-index: 2; }
+
+        .stats-section { background: var(--q-gold); padding: 80px 0; color: var(--q-primary-dark); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; text-align: center; }
+        .stat-item h2 { font-size: 4rem; font-family: var(--font-heading); margin-bottom: 10px; }
+        .stat-item p { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+        .reviews-section { padding: 120px 0; background: var(--q-white); }
+        .review-card { background: var(--q-off-white); padding: 40px; border-radius: 25px; border-top: 5px solid var(--q-gold); position: relative; }
+        .review-card i { color: var(--q-gold); font-size: 30px; margin-bottom: 20px; }
+        .user-info { display: flex; align-items: center; gap: 15px; margin-top: 30px; }
+        .user-avatar { width: 55px; height: 55px; border-radius: 50%; background: #ddd; }
+
+        /* ==========================================================================
+           🌟 NEWS SECTION & MODAL (القسم المُضاف حديثاً)
+           ========================================================================== */
+        .news-section { padding: 100px 0; background: var(--q-off-white); }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 35px; margin-top: 40px; }
+        .news-card { background: var(--q-white); border-radius: 24px; overflow: hidden; box-shadow: var(--glass-shadow); transition: var(--trans-smooth); border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; }
+        .news-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.1); border-color: var(--q-gold); }
+        .news-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 3px solid var(--q-gold); }
+        .news-content { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+        .news-date { font-family: var(--font-heading); font-size: 12px; color: var(--q-gold); font-weight: 900; margin-bottom: 10px; }
+        .news-title { font-family: var(--font-heading); font-size: 20px; color: var(--q-primary-dark); margin-bottom: 15px; line-height: 1.4; }
+        
+        /* هنا سر تعدد الأسطر وقراءة الخبر زي الكتاب */
+        .news-desc { font-size: 15px; color: var(--q-gray); line-height: 1.8; margin-bottom: 20px; flex: 1; white-space: normal; }
+        
+        .btn-read-more { background: rgba(27,67,50,0.05); color: var(--q-primary); border: 1px solid rgba(27,67,50,0.1); padding: 12px 20px; border-radius: 12px; font-weight: 800; font-family: var(--font-main); cursor: pointer; transition: var(--trans-smooth); display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; font-size: 14px; }
+        .btn-read-more:hover { background: var(--q-primary); color: var(--q-white); transform: translateY(-2px); }
+
+        /* Glassmorphism Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(8, 28, 21, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-box { background: var(--q-white); width: 100%; max-width: 650px; max-height: 90vh; border-radius: 30px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); border: 2px solid var(--q-gold); transform: scale(0.95) translateY(20px); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; position: relative; }
+        .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+        .btn-close-modal { position: absolute; top: 20px; left: 20px; width: 40px; height: 40px; background: rgba(0,0,0,0.5); color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; z-index: 10; border: none; backdrop-filter: blur(5px); transition: 0.3s; }
+        .btn-close-modal:hover { background: var(--q-danger); transform: rotate(90deg); }
+        .modal-img-full { width: 100%; height: 300px; object-fit: cover; }
+        .modal-body { padding: 35px; overflow-y: auto; }
+        .modal-title-full { font-family: var(--font-heading); font-size: 26px; font-weight: 900; color: var(--q-primary-dark); margin-bottom: 15px; line-height: 1.4; }
+        .modal-date-full { font-family: var(--font-heading); font-size: 13px; color: var(--q-gold); font-weight: 900; margin-bottom: 25px; display: inline-block; background: rgba(212, 163, 115, 0.1); padding: 6px 15px; border-radius: 10px; }
+        .modal-desc-full { font-size: 16px; color: var(--q-dark); line-height: 1.9; white-space: pre-wrap; }
+
+        /* ==========================================================================
+           7. MEGA FOOTER
+           ========================================================================== */
+        .mega-footer { background: #040d0a; color: #9ca3af; padding: 120px 0 0; border-top: 8px solid var(--q-accent); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 70px; margin-bottom: 80px; }
+        
+        .f-col h4 { color: #fff; font-size: 22px; margin-bottom: 35px; position: relative; display: inline-block; }
+        .f-col h4::after { content: ''; position: absolute; bottom: -12px; right: 0; width: 45px; height: 3px; background: var(--q-gold); }
+        .f-brand h3 { font-size: 34px; color: #fff; margin-bottom: 25px; }
+        .f-brand h3 span { color: var(--q-gold); }
+        .f-brand p { font-size: 15px; line-height: 1.9; max-width: 400px; }
+        
+        .social-links { display: flex; gap: 15px; margin-top: 30px; }
+        .social-links a { width: 48px; height: 48px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; transition: 0.3s; }
+        .social-links a:hover { background: var(--q-accent); transform: translateY(-5px) rotate(360deg); }
+
+        .f-contact li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+        .f-contact i { color: var(--q-gold); font-size: 20px; margin-top: 5px; }
+
+        .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 40px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .dev-badge { background: rgba(255,255,255,0.03); padding: 10px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); }
+        .dev-badge a { color: #fff; font-weight: 900; font-family: var(--font-heading); letter-spacing: 1px; }
+
+        /* ==========================================================================
+           8. RESPONSIVE QUERIES
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .footer-grid, .phil-grid { grid-template-columns: 1fr 1fr; }
+            .hero-content h1 { font-size: 4rem; }
+        }
+        @media (max-width: 768px) {
+            .nav-menu { display: none !important; }
+            .nav-container { position: relative; }
+            .mobile-menu-btn { display: block; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+            
+            .footer-grid, .phil-grid, .services-grid, .lab-grid, .stats-grid { grid-template-columns: 1fr; }
+            .hero-content { padding-right: 0; text-align: center; }
+            .hero-content h1 { font-size: 2.8rem; }
+            .hero-content p { border-right: none; padding-right: 0; }
+            .hero-btns { justify-content: center; flex-direction: column; }
+            .btn-xl { width: 100%; text-align: center; }
+
+            .container-1 { width: 100%; max-width: 14000px; margin: 0 auto; padding: 0 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-box">قهوتنا وبس</a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="mobile-nav-overlay" id="mobileNav">
+                <button class="close-menu-btn" id="closeMenuBtn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="mobile-logo">قهوتنا وبس</div>
+                <ul class="mobile-menu-list">
+                    <li><a href="index.html" style="color: var(--q-gold); font-weight: 900;"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                    <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> عنا</a></li>
+                    <li><a href="menu.html"><i class="fa-solid fa-mug-hot"></i> المنيو</a></li>
+                    <li><a href="rating.html"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                    <li><a href="complaints.html"><i class="fa-solid fa-head-side-cough"></i> الشكاوى</a></li>
+                    <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                    <li><a href="location.html"><i class="fa-solid fa-location-dot"></i> الفروع</a></li>
+                    <li><a href="jobs.html"><i class="fa-solid fa-briefcase"></i> التوظيف</a></li>
+                    <li><a href="bingo.html" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> لعبة البينجو</a></li>
+                    <li><a href="login.html"><i class="fa-solid fa-shield-halved"></i> الإدارة</a></li>
+                </ul>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-item active">الرئيسية</a></li>
+                    <li><a href="about.html" class="nav-item">عنا</a></li>
+                    
+                    <li class="nav-item has-dropdown">
+                        <span>المنيو <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-mug-hot"></i> المشروبات الساخنة</a></li>
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-glass-water"></i> المشروبات الباردة</a></li>
+                            
+                        </ul>
+                    </li>
+
+                    <li class="nav-item has-dropdown">
+                        <span>خدمات الزبائن <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="rating.html" class="dropdown-link"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                            <li><a href="complaints.html" class="dropdown-link"><i class="fa-solid fa-headset"></i> مكتب الشكاوى</a></li>
+                            <li><a href="contact.html" class="dropdown-link"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="location.html" class="nav-item">الفروع</a></li>
+                    <li><a href="jobs.html" class="nav-item">التوظيف</a></li>
+                    <li><a href="bingo.html" class="nav-item" style="color:var(--q-gold);"><i class="fa-solid fa-gift"></i> بينجو</a></li>
+
+                    <li>
+                        <a href="login.html" class="btn-auth">
+                            <i class="fa-solid fa-shield-halved"></i> الإدارة المركزية
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero-slider" id="main-slider"></section>
+
+    <section class="phil-section">
+        <div class="container phil-grid">
+            <div class="phil-img" data-aos="fade-left">
+                <img src="qahwa.png" alt="Coffee Philosophy">
+                <div class="phil-badge">
+                     افضل<br>  قهوة في الأردن
+                </div>
+            </div>
+            <div class="phil-text" data-aos="fade-right">
+                <p style="color:var(--q-gold); font-weight:900; margin-bottom:10px;">أكثر من مجرد مقهى</p>
+                <h2>  قهوتنا وبس :<br>قصة <span></span> </h2>
+                <p>كل يوم في قهوتنا وبس منأمن انه قصتنا احلى قصة مشروع ، واجهنا صعوبات بس احنا اليوم احسن قهوة في الاردن</p>
+                <div class="phil-quote">
+                    جربنا مرا ، بترجع كل مرا ؟
+                </div>
+                <p>صممنا فروعنا لتكون مش بس قهوة لتكون بيتك الي بتاخذ راحتك فيه "احنا مش بس قهوة ، احنا اسلوب حياة " </p>
+                <a href="about.html" class="btn-xl btn-xl-gold" style="display:inline-block; margin-top:20px;">اكتشف رحلتنا الكاملة</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="container">
+            <div class="sec-header" data-aos="fade-up">
+                <h2>خدمات </h2>
+                <div class="gold-line"></div>
+                <p style="margin-top:25px; color:var(--q-gray); max-width:700px; margin-inline:auto;">منقدم لك خدمات مش موجودة عند الكل احنا غير عن الكل احنا خدماتنا عملنها عشان تكون قهوتنا وبس بيتك الي بتاخذ راحتك فيه </p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="s-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    <h3>  التوصيل</h3>
+                    <p>نحن نقدم لك أسهل الخدمات ، منها التوصيل ، توصيل قهوتنا وبس هو الاسرع هو الافضل و هو الاقوى</p>
+                </div>
+                <div class="s-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fa-solid fa-box-open"></i>
+                    <h3> البن </h3>
+                    <p>  نقدم لك اجود انواع البن من قهوتنا وبس </p>
+                </div>
+                <div class="s-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <h3>  الشباب</h3>
+                    <p> نحن نؤمن ان شبابنا صناع المستقبل ، لذلك قهوتنا وبس ليس مقهى فقط ، بل منزل لشباب </p>
+                </div>
+                <div class="s-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fa-solid fa-microchip"></i>
+                    <h3>الخدمات  </h3>
+                    <p>نقدم لك اقوى الخدامات ، الرقمية ، الابداعية ، السريعة ، الرائعة</p>
+                </div>
+                <div class="s-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fa-solid fa-laptop-code"></i>
+                    <h3>الرقمية  </h3>
+                    <p>نقدم لك افضل الخدمات الرقمية عبر الانرتنت ، عبر الموقع الاكتروني </p>
+                </div>
+                <div class="s-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fa-solid fa-gift"></i>
+                    <h3>الجوائز  </h3>
+                    <p>نقدم لك " بينجو " لتربح الجوائز خاضعة لشروط و الاحكام</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="lab-section">
+        <div class="container">
+            <div class="sec-header" data-aos="fade-up">
+                <h2 style="color:#fff;"> الجودة</h2>
+                <div class="gold-line"></div>
+                <p style="margin-top:20px; color:#aaa;">في قهوتنا وبس " الجودة اكيد موجودة ! "</p>
+            </div>
+            <div class="lab-grid">
+                <div class="step-box" data-aos="zoom-in">
+                    <div class="step-num">01</div>
+                    <h3>صنع القهوة</h3>
+                    <p>يتم تحميص القهوة و تحضيرها بافضل الآلات الحديثة </p>
+                </div>
+                <div class="step-box" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="step-num">02</div>
+                    <h3> تحضير القهوة</h3>
+                    <p>    يتم تحضير القهوة من افضل المحضرين ، لتكون اشهى قهوة تشربها</p>
+                </div>
+                <div class="step-box" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="step-num">03</div>
+                    <h3>تقديم القهوة </h3>
+                    <p>يتم تقديم القهوة بمحبة ، و نستخدم اجود الانواع</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container stats-grid">
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                <h2 class="counter">7</h2>
+                <p>    ايام الدوام الرسمي   </p>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="counter">9</h2>
+                <p>  خدمات سريعة</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container-1">
+            <div class="sec-header" data-aos="fade-up">
+                <h2 style="color:#42754f; margin-top:50px;"> ولا انت شو رأيك !</h2>
+                <div class="gold-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="news-section" id="news-section">
+        <div class="container">
+            <div class="sec-header" data-aos="fade-up">
+                <h2 style="font-size: 3rem; color: var(--q-primary-dark);">آخر الأخبار</h2>
+                <div class="gold-line"></div>
+            </div>
+            <div class="news-grid" id="news-grid-container">
+                <div style="text-align: center; width: 100%; grid-column: 1/-1; padding: 40px; color: var(--q-gray);">
+                    <i class="fa-solid fa-spinner fa-spin"></i> جاري جلب الأخبار المركزية...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="mainNewsModal" onclick="closeNewsModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <button class="btn-close-modal" onclick="closeNewsModal(event, true)"><i class="fa-solid fa-xmark"></i></button>
+            <img id="m-img-view" class="modal-img-full" src="" alt="News Image">
+            <div class="modal-body">
+                <div class="modal-date" id="m-date-view"></div>
+                <h2 class="modal-title-full" id="m-title-view"></h2>
+                <div class="modal-desc-full" id="m-desc-view"></div>
+            </div>
+        </div>
+    </div>
+    <footer class="mega-footer">
+        <div class="container">
+            <div class="footer-grid">
+                
+                <div class="f-col f-brand" data-aos="fade-up">
+                    <h3>قهوتنا <span>وبس</span></h3>
+                    <p>قهوتنا وبس بتقدم لك احسن الخدمات " منقدملك احسن الخدمات ، مش اي شيء ؟ " </p>
+                    <div class="social-links">
+                        <a href="contact.html"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-snapchat"></i></a>
+                    </div>
+                </div>
+
+                <div class="f-col" data-aos="fade-up" data-aos-delay="100">
+                    <h4>تصفح </h4>
+                    <ul>
+                        <li><a href="index.html">الصفحة الرئيسية</a></li>
+                        <li><a href="menu.html">قائمة المشروبات</a></li>
+                        <li><a href="location.html">خريطة الفروع</a></li>
+                        <li><a href="about.html">قصتنا </a></li>
+                    </ul>
+                </div>
+
+                <div class="f-col" data-aos="fade-up" data-aos-delay="200">
+                    <h4>الإدارة والخدمات</h4>
+                    <ul>
+                        <li><a href="jobs.html">بوابة التوظيف الموحدة</a></li>
+                        <li><a href="rating.html">تقييم جودة الخدمة</a></li>
+                        <li><a href="complaints.html">مكتب معالجة الشكاوى</a></li>
+                        <li><a href="bingo.html" style="color:var(--q-gold);">نظام جوائز البينجو</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="f-bottom">
+                <div class="copyright-text">&copy; 2026 جميع الحقوق محفوظة لعلامة "قهوتنا وبس" التجارية.</div>
+                
+                <div class="dev-badge">
+                    <span style="font-size:12px; opacity:0.6; margin-left:10px;">System Engineered by</span>
+                    <a href="https://sites.google.com/view/ix1karam3ix" target="_blank">KARAM GHANDI </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="database.js"></script>
+
+    <script>
+        // 1. Initialize AOS
+        AOS.init({ duration: 1000, once: true });
+
+        // 2. Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            if(preloader) {
+                setTimeout(() => {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => preloader.style.display = 'none', 600);
+                }, 1000);
+            }
+        });
+
+        // 3. Navbar Scroll Effect
+        window.onscroll = () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 80) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        };
+
+        // 4. Hero Slider Implementation
+        const sliderContent = [
+            { img: 'background3.png', t: 'أهلاً بك في <span>قهوتنا وبس</span>.', d: 'نحن لا نصنع القهوة، نحن نبني مجتمعاً يجمعه الشغف والجودة المطلقة في كل كوب نعده لك.' },
+            { img: 'background4.png', t: 'قهوة <span>طازجة</span> يومياً.', d: 'قهوتنا وبس كله اول بأول ، من القهوة ل شاي ل كل شي عنا ؟' },
+            { img: 'coffee.png', t: 'بيئة <span>للإبداع والإنجاز</span>.', d: 'صممنا فروعنا لتكون المكان الأمثل للدراسة، العمل، أو لقاء الأصدقاء في جو هادئ وراقٍ يغمر حواسك.' }
+        ];
+
+        const sliderCont = document.getElementById('main-slider');
+        if(sliderCont) {
+            sliderContent.forEach((s, i) => {
+                const slide = document.createElement('div');
+                slide.className = `slide ${i===0 ? 'active' : ''}`;
+                slide.style.backgroundImage = `url('${s.img}')`;
+                slide.innerHTML = `
+                    <div class="slide-overlay"></div>
+                    <div class="container hero-content">
+                        <h1>${s.t}</h1>
+                        <p>${s.d}</p>
+                        <div class="hero-btns">
+                            <a href="menu.html" class="btn-xl btn-xl-gold"> تصفح المنيو</a>
+                            <a href="location.html" class="btn-xl btn-xl-outline">فروعنا</a>
+                        </div>
+                    </div>
+                `;
+                sliderCont.appendChild(slide);
+            });
+
+            let currentSlide = 0;
+            setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if(slides.length > 0) {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                }
+            }, 7000);
+        }
+
+        // 5. Counters Logic
+        const counters = document.querySelectorAll('.counter');
+        const startCounters = () => {
+            counters.forEach(counter => {
+                const target = parseInt(counter.innerText);
+                let current = 0;
+                const increment = target / 50;
+                const update = () => {
+                    if(current < target) {
+                        current += increment;
+                        counter.innerText = Math.ceil(current) + (target > 100 ? '+' : '');
+                        setTimeout(update, 30);
+                    } else { counter.innerText = target + (target > 100 ? '+' : ''); }
+                };
+                update();
+            });
+        };
+
+        let started = false;
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 1500 && !started) {
+                startCounters();
+                started = true;
+            }
+        });
+
+        // 6. Mobile Menu Logic (Hamburger)
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeMenuBtn');
+
+        if (mobileBtn && mobileNav) {
+            mobileBtn.addEventListener('click', () => { mobileNav.classList.add('active'); });
+        }
+        if (closeBtn && mobileNav) {
+            closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
+        }
+        document.addEventListener('click', (e) => {
+            if (mobileNav && mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && !mobileBtn.contains(e.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // ==========================================================================
+        // 🌟 7. NEWS ENGINE LOGIC
+        // ==========================================================================
+        let newsCacheArray = [];
+        const newsGrid = document.getElementById('news-grid-container');
+        const newsModal = document.getElementById('mainNewsModal');
+
+        // نعتمد أن ملف database.js يقوم بتهيئة Firebase
+        if (typeof firebase !== 'undefined') {
+            const fireDB = firebase.firestore();
+            
+            fireDB.collection("news").onSnapshot(snap => {
+                newsCacheArray = [];
+                if (snap.empty) {
+                    if(newsGrid) newsGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--q-gray); font-weight:bold;">لا يوجد أخبار حالياً.</div>';
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    newsCacheArray.push(data);
+                });
+
+                // ترتيب الأخبار الأحدث أولاً
+                newsCacheArray.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                if(newsGrid) {
+                    newsGrid.innerHTML = ''; 
+                    
+                    newsCacheArray.forEach(news => {
+                        const card = document.createElement('div');
+                        card.className = 'news-card';
+                        card.setAttribute('data-aos', 'fade-up');
+
+                        // هنا سر الأسطر المتعددة: قمنا بزيادة الحد لـ 250 حرف ليظهر كفقرة كتاب
+                        let shortDesc = news.desc || '';
+                        let needsReadMore = false;
+                        
+                        if (shortDesc.length > 250) {
+                            shortDesc = shortDesc.substring(0, 250) + '...';
+                            needsReadMore = true;
+                        }
+
+                        let html = `
+                            <img src="${news.image}" class="news-img" alt="${news.title}" onerror="this.src='https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=500&q=80'">
+                            <div class="news-content">
+                                <div class="news-date"><i class="fa-regular fa-calendar"></i> <span style="direction:ltr;">${news.date || 'جديد'}</span></div>
+                                <h3 class="news-title">${news.title}</h3>
+                                <div class="news-desc">${shortDesc}</div>
+                        `;
+
+                        if (needsReadMore) {
+                            html += `<button class="btn-read-more" onclick="openNewsModal('${news.id}')">قراءة المزيد <i class="fa-solid fa-arrow-left" style="margin-right:5px;"></i></button>`;
+                        }
+
+                        html += `</div>`;
+                        card.innerHTML = html;
+                        newsGrid.appendChild(card);
+                    });
+                }
+            });
+        }
+
+        function openNewsModal(id) {
+            const news = newsCacheArray.find(n => n.id === id);
+            if (news) {
+                document.getElementById('m-img-view').src = news.image;
+                document.getElementById('m-title-view').innerText = news.title;
+                document.getElementById('m-date-view').innerHTML = `<i class="fa-regular fa-calendar"></i> <span style="direction:ltr;">${news.date}</span>`;
+                document.getElementById('m-desc-view').innerText = news.desc;
+                
+                newsModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeNewsModal(event, force = false) {
+            if (force || event.target.id === 'mainNewsModal') {
+                newsModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+</body>
+</html>

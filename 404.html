@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>قهوتنا وبس | ملف غير موجود 404</title>
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&family=Tajawal:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-green: #1b4332; /* أخضر غابة عميق */
+            --accent-green: #2ecc71;  /* أخضر مشرق للتفاعل */
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #081c15;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: #f8fbf9;
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- الهيدر (Navigation) --- */
+        .nav-bar {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0; width: 100%; z-index: 100;
+        }
+
+        .logo-top { height: 40px; transition: var(--transition); }
+
+        /* زر البرجر المطور */
+        .burger-btn {
+            width: 45px; height: 45px;
+            background: #fff;
+            border-radius: 12px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            gap: 6px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: var(--transition);
+        }
+
+        .burger-btn span {
+            width: 24px; height: 2px;
+            background: var(--primary-green);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* --- القائمة الجانبية (Drawer) --- */
+        .menu-drawer {
+            position: fixed; top: 0; right: -100%;
+            width: 85%; height: 100%;
+            background: var(--primary-green);
+            z-index: 200; transition: var(--transition);
+            display: flex; flex-direction: column;
+            padding: 100px 40px;
+        }
+
+        .menu-drawer.open { right: 0; box-shadow: -20px 0 50px rgba(0,0,0,0.2); }
+
+        .menu-link {
+            color: #fff; text-decoration: none;
+            font-size: 24px; font-weight: 700;
+            margin-bottom: 30px; display: flex; align-items: center; gap: 15px;
+            transition: 0.3s; opacity: 0; transform: translateX(30px);
+        }
+
+        .menu-drawer.open .menu-link { opacity: 1; transform: translateX(0); }
+
+        .menu-link i { color: var(--accent-green); font-size: 20px; }
+
+        .close-drawer {
+            position: absolute; top: 25px; left: 25px;
+            color: #fff; font-size: 30px; cursor: pointer;
+        }
+
+        /* --- المحتوى الرئيسي --- */
+        .main-stage {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
+        }
+
+        .img-container {
+            position: relative; margin-bottom: 30px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .logo-center { max-width: 280px; width: 100%; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1)); }
+
+        .error-msg {
+            font-family: 'Tajawal', sans-serif;
+            font-size: clamp(24px, 6vw, 34px);
+            font-weight: 900; color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .sub-msg {
+            font-size: 17px; color: #666;
+            max-width: 350px; line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        
+
+        /* --- الفوتر --- */
+        .footer-note {
+            padding: 20px; font-size: 13px; color: #aaa;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* للموبايل الصغير جداً */
+        @media (max-width: 380px) {
+            .logo-center { max-width: 220px; }
+            .error-msg { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <img src="logo1.png" alt="قهوتنا وبس" class="logo-top">
+        <div class="burger-btn" onclick="openMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <div class="menu-drawer" id="drawer">
+        <div class="close-drawer" onclick="closeMenu()">&times;</div>
+        <a href="index.html" class="menu-link" style="transition-delay: 0.2s;">
+            <i class="fa-solid fa-house"></i> الرئيسية
+        </a>
+        <a href="#" class="menu-link" style="transition-delay: 0.3s;" onclick="location.reload()">
+            <i class="fa-solid fa-arrow-rotate-right"></i> إعادة المحاولة
+        </a>
+    </div>
+
+    <main class="main-stage">
+        <div class="img-container">
+            <img src="logo2.png" alt="Error" class="logo-center">
+        </div>
+        
+        <h1 class="error-msg">أنت متأكد من الرابط؟</h1>
+        <p class="sub-msg">ممكن تكون مدخل رابط غلط او في مشكله ؟</p>
+        
+    </main>
+
+    <footer class="footer-note">
+        قهوتنا وبس • منصة الإدارة السيادية
+    </footer>
+
+    <script>
+        function openMenu() {
+            document.getElementById('drawer').classList.add('open');
+        }
+        function closeMenu() {
+            document.getElementById('drawer').classList.remove('open');
+        }
+    </script>
+</body>
+</html>

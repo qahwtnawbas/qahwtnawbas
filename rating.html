@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تقييم | قهوتنا وبس</title>
+    <meta name="description" content="رأيك يصنع الفرق. شاركنا تجربتك في قهوتنا وبس لنستمر في تقديم الأفضل لك.">
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Tajawal:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. CORE VARIABLES & THEME
+           ========================================================================== */
+        :root {
+            --q-primary: #1B4332; --q-primary-light: #2D6A4F; --q-primary-dark: #081C15;
+            --q-accent: #40916C; --q-gold: hwb(120 66% 8%); --q-white: #ffffff;
+            --q-off-white: #f8fbf9; --q-dark: #111827; --q-gray: #6b7280;
+            --q-danger: #e63946; --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2); --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-main: 'IBM Plex Sans Arabic', sans-serif; --font-heading: 'Tajawal', sans-serif;
+            --trans-fast: 0.3s ease; --trans-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --z-nav: 1000; --z-dropdown: 1010; --z-toast: 9999;
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--q-off-white); }
+        ::-webkit-scrollbar-thumb { background: var(--q-accent); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--q-primary); }
+
+        body { font-family: var(--font-main); background-color: var(--q-off-white); color: var(--q-dark); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 900; }
+        a { text-decoration: none; color: inherit; transition: var(--trans-fast); }
+        ul { list-style: none; }
+        button { font-family: var(--font-main); cursor: pointer; border: none; background: none; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
+
+        /* ==========================================================================
+           3. PRELOADER
+           ========================================================================== */
+        #preloader { position: fixed; inset: 0; background: var(--q-primary-dark); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease; }
+        .loader-cup { width: 80px; height: 80px; border: 4px solid var(--q-gold); border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; animation: floatCup 2s infinite ease-in-out; }
+        .loader-cup::after { content: ''; position: absolute; top: 10px; right: -20px; width: 25px; height: 40px; border: 4px solid var(--q-gold); border-radius: 20px; }
+        .loader-smoke { display: flex; gap: 10px; position: absolute; top: -40px; left: 15px; }
+        .smoke-line { width: 4px; height: 30px; background: rgba(212,163,115,0.6); border-radius: 5px; animation: smokeRise 1.5s infinite ease-in; opacity: 0; }
+        .smoke-line:nth-child(2) { animation-delay: 0.4s; height: 40px; }
+        .smoke-line:nth-child(3) { animation-delay: 0.8s; }
+        @keyframes floatCup { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes smokeRise { 0% { transform: translateY(0) scaleY(1); opacity: 0.8; } 100% { transform: translateY(-30px) scaleY(2); opacity: 0; } }
+        .loader-text { margin-top: 30px; color: var(--q-gold); font-family: var(--font-heading); font-size: 20px; letter-spacing: 2px; }
+
+        /* ==========================================================================
+           4. MEGA HEADER
+           ========================================================================== */
+        .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: var(--z-nav); background: transparent; padding: 25px 0; border-bottom: 1px solid transparent; transition: var(--trans-smooth); }
+        .main-header.scrolled { padding: 10px 0; background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: var(--glass-shadow); border-bottom-color: var(--glass-border); }
+        
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { font-family: var(--font-heading); font-size: 28px; color: var(--q-white); border: 3px solid var(--q-white); padding: 5px 20px; transition: var(--trans-fast); letter-spacing: 1px; }
+        .main-header.scrolled .logo-box { color: var(--q-primary); border-color: var(--q-primary); }
+        .logo-box:hover { background: var(--q-primary); color: var(--q-white) !important; transform: scale(1.05); }
+
+        .nav-menu { display: flex; align-items: center; gap: 35px; }
+        .nav-item { position: relative; font-weight: 700; color: var(--q-white); font-size: 16px; padding: 10px 0; transition: var(--trans-fast); cursor: pointer; }
+        .main-header.scrolled .nav-item { color: var(--q-dark); }
+        .nav-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background: var(--q-gold); transition: var(--trans-fast); border-radius: 5px; }
+        .nav-item:hover::after, .nav-item.active::after { width: 100%; }
+        .nav-item:hover { color: var(--q-gold); }
+        .main-header.scrolled .nav-item:hover, .main-header.scrolled .nav-item.active { color: var(--q-primary); }
+
+        .has-dropdown { display: flex; align-items: center; gap: 8px; }
+        .has-dropdown i { font-size: 10px; transition: 0.3s; }
+        .has-dropdown:hover i { transform: rotate(180deg); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; min-width: 240px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); opacity: 0; visibility: hidden; transform: translateY(15px); transition: var(--trans-smooth); padding: 10px 0; z-index: var(--z-dropdown); display: flex; flex-direction: column; }
+        .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-link { display: flex; align-items: center; gap: 10px; padding: 12px 20px; color: var(--q-dark) !important; font-size: 15px !important; transition: var(--trans-fast); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .dropdown-link:last-child { border-bottom: none; }
+        .dropdown-link:hover { background: rgba(64,145,108,0.08); color: var(--q-primary) !important; padding-right: 30px; }
+
+        .btn-auth { background: var(--q-primary); color: var(--q-white) !important; padding: 12px 28px; border-radius: 8px; font-weight: 800; font-size: 15px; transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(27, 67, 50, 0.3); }
+        .btn-auth:hover { background: var(--q-accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(64,145,108,0.5); }
+
+        /* ==========================================================================
+           5. MOBILE MENU (HAMBURGER)
+           ========================================================================== */
+        .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--q-white); font-size: 28px; cursor: pointer; transition: 0.3s; }
+        .main-header.scrolled .mobile-menu-btn { color: var(--q-primary-dark); }
+        .mobile-nav-overlay { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; background: #040d0a; z-index: 10000; padding: 60px 20px; box-shadow: 5px 0 30px rgba(0,0,0,0.8); transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-right: 2px solid var(--q-gold); }
+        .mobile-nav-overlay.active { left: 0; }
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; border: none; color: var(--q-white); font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .close-menu-btn:hover { background: var(--q-danger); transform: rotate(90deg); }
+        .mobile-logo { color: var(--q-white); font-family: var(--font-heading); font-size: 24px; margin-bottom: 30px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .mobile-menu-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
+        .mobile-menu-list a { color: #ffffff; font-size: 17px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; transition: 0.3s; background: rgba(255,255,255,0.03); }
+        .mobile-menu-list a i { color: var(--q-gold); width: 20px; text-align: center; }
+        .mobile-menu-list a:hover { background: var(--q-primary); padding-left: 25px; color: var(--q-gold); }
+
+        /* ==========================================================================
+           6. RATING HERO SECTION
+           ========================================================================== */
+        .rating-hero { position: relative; height: 50vh; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background-color: var(--q-primary-dark); }
+        .rating-hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat; opacity: 0.3; animation: slowZoom 20s infinite alternate linear; }
+        @keyframes slowZoom { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+        .rating-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--q-off-white) 0%, transparent 100%); z-index: 2; opacity: 0.8; }
+        
+        .rating-hero-content { position: relative; z-index: 3; color: var(--q-white); max-width: 800px; padding: 0 20px; margin-top: 50px; }
+        .rating-hero-content h1 { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 20px; text-shadow: 0 10px 20px rgba(0,0,0,0.5); color: var(--q-primary-dark); }
+        .rating-hero-content p { font-size: 1.3rem; color: var(--q-gray); font-weight: 500; }
+
+        /* ==========================================================================
+           7. RATING FORM SECTION
+           ========================================================================== */
+        .rating-section { padding: 40px 0 120px; position: relative; z-index: 5; }
+        .rating-card { background: var(--q-white); border-radius: 30px; box-shadow: var(--glass-shadow); padding: 60px; max-width: 800px; margin: -100px auto 0; position: relative; border: 1px solid rgba(0,0,0,0.05); }
+        
+        .stars-container { display: flex; flex-direction: row-reverse; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .star-icon { font-size: 50px; color: #e5e7eb; cursor: pointer; transition: 0.2s; }
+        .stars-container:hover .star-icon { color: #e5e7eb; }
+        .star-icon:hover, .star-icon:hover ~ .star-icon { color: var(--q-gold) !important; transform: scale(1.1); }
+        .star-icon.active { color: var(--q-gold); }
+
+        .rating-desc { text-align: center; font-size: 1.2rem; color: var(--q-accent); font-weight: bold; margin-bottom: 40px; min-height: 30px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+        .input-group { display: flex; flex-direction: column; text-align: right; }
+        .input-group label { font-size: 14px; color: var(--q-gray); margin-bottom: 10px; font-weight: 600; }
+        .input-control { width: 100%; padding: 18px 25px; background: var(--q-off-white); border: 1px solid rgba(0,0,0,0.05); border-radius: 12px; font-size: 16px; font-family: inherit; color: var(--q-dark); transition: var(--trans-fast); }
+        .input-control:focus { background: var(--q-white); border-color: var(--q-accent); box-shadow: 0 0 0 4px rgba(64,145,108,0.1); }
+        textarea.input-control { resize: vertical; min-height: 150px; }
+        .full-width { grid-column: 1 / -1; }
+
+        .btn-submit-rating { width: 100%; background: var(--q-primary); color: var(--q-white); padding: 20px; border-radius: 15px; font-weight: 900; font-family: var(--font-heading); font-size: 18px; margin-top: 20px; transition: var(--trans-smooth); box-shadow: 0 15px 30px rgba(27,67,50,0.2); }
+        .btn-submit-rating:hover { background: var(--q-accent); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(64,145,108,0.3); }
+        .btn-submit-rating:disabled { background: var(--q-gray); cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .form-msg { text-align: center; margin-top: 25px; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 15px; display: none; }
+        .msg-success { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .msg-error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        /* ==========================================================================
+           8. THE MEGA FOOTER
+           ========================================================================== */
+        .mega-footer { background: #040d0a; color: #9ca3af; padding: 100px 0 0; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 60px; margin-bottom: 60px; }
+        .f-brand h3 { font-size: 32px; color: var(--q-white); margin-bottom: 25px; }
+        .f-brand h3 span { color: var(--q-gold); }
+        .f-brand p { line-height: 1.9; margin-bottom: 30px; font-size: 15px; max-width: 400px; }
+        .socials { display: flex; gap: 15px; }
+        .socials a { width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--q-white); font-size: 18px; transition: var(--trans-fast); }
+        .socials a:hover { background: var(--q-accent); transform: translateY(-5px); }
+        
+        .f-links h4 { color: var(--q-white); font-size: 22px; margin-bottom: 30px; position: relative; display: inline-block; }
+        .f-links h4::after { content: ''; position: absolute; bottom: -10px; right: 0; width: 40px; height: 3px; background: var(--q-gold); }
+        .f-links ul li { margin-bottom: 15px; }
+        .f-links ul a { transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; }
+        .f-links ul a::before { content: '←'; color: var(--q-accent); opacity: 0; transition: 0.3s; transform: translateX(10px); }
+        .f-links ul a:hover { color: var(--q-gold); }
+        .f-links ul a:hover::before { opacity: 1; transform: translateX(0); }
+
+        .f-contact li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+        .f-contact i { color: var(--q-gold); font-size: 20px; margin-top: 5px; }
+
+        .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 30px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .dev-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); transition: var(--trans-fast); }
+        .dev-badge:hover { background: rgba(255,255,255,0.08); border-color: var(--q-accent); box-shadow: 0 0 20px rgba(64,145,108,0.2); }
+        .dev-badge span { font-size: 13px; color: #6b7280; }
+        .dev-badge a { color: var(--q-white); font-weight: 900; font-family: var(--font-heading); letter-spacing: 1px; font-size: 14px; }
+        .dev-badge i { color: var(--q-danger); animation: heartbeat 1.5s infinite; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+        /* ==========================================================================
+           9. RESPONSIVE
+           ========================================================================== */
+        @media (max-width: 992px) { .footer-grid { grid-template-columns: 1fr 1fr; } .form-grid { grid-template-columns: 1fr; } .rating-card { padding: 40px 30px; } }
+        @media (max-width: 768px) { 
+            .nav-menu { display: none !important; } 
+            .nav-container { position: relative; }
+            .mobile-menu-btn { display: block; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+
+            .footer-grid { grid-template-columns: 1fr; } 
+            .rating-hero-content h1 { font-size: 2.5rem; }
+            .stars-container { gap: 10px; }
+            .star-icon { font-size: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    
+
+    <header class="main-header" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-box">قهوتنا وبس</a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="mobile-nav-overlay" id="mobileNav">
+                <button class="close-menu-btn" id="closeMenuBtn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="mobile-logo">قهوتنا وبس</div>
+                <ul class="mobile-menu-list">
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                    <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> عنا</a></li>
+                    <li><a href="menu.html"><i class="fa-solid fa-mug-hot"></i> المنيو</a></li>
+                    <li><a href="rating.html" style="color: var(--q-gold); font-weight: 900;"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                    <li><a href="complaints.html"><i class="fa-solid fa-head-side-cough"></i> الشكاوى</a></li>
+                    <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                    <li><a href="location.html"><i class="fa-solid fa-location-dot"></i> الفروع</a></li>
+                    <li><a href="jobs.html"><i class="fa-solid fa-briefcase"></i> التوظيف</a></li>
+                    <li><a href="bingo.html" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> لعبة البينجو</a></li>
+                    <li><a href="login.html"><i class="fa-solid fa-shield-halved"></i> الإدارة</a></li>
+                </ul>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-item">الرئيسية</a></li>
+                    <li><a href="about.html" class="nav-item">عنا</a></li>
+
+                    <li class="nav-item has-dropdown">
+                        <span>المنيو <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-mug-hot"></i> المشروبات الساخنة</a></li>
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-glass-water"></i> المشروبات الباردة</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item has-dropdown active">
+                        <span>خدمات الزبائن <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="rating.html" class="dropdown-link"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                            <li><a href="complaints.html" class="dropdown-link"><i class="fa-solid fa-headset"></i> مكتب الشكاوى</a></li>
+                            <li><a href="contact.html" class="dropdown-link"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li><a href="location.html" class="nav-item">الفروع</a></li>
+                    <li><a href="jobs.html" class="nav-item">التوظيف</a></li>
+                    <li><a href="bingo.html" class="nav-item" style="color: var(--q-gold);"><i class="fa-solid fa-gift"></i> بينجو</a></li>
+                    
+                    <li>
+                        <a href="login.html" class="btn-auth">
+                            <i class="fa-solid fa-shield-halved"></i> الإدارة المركزية
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="rating-hero">
+        <div class="rating-hero-bg"></div>
+        <div class="rating-overlay"></div>
+        <div class="rating-hero-content" data-aos="zoom-in" data-aos-duration="1200">
+            <h1>قيمنا هسا !</h1>
+        </div>
+    </section>
+
+    <section class="rating-section">
+        <div class="container">
+            <div class="rating-card" data-aos="fade-up">
+                
+                <div class="stars-container" id="starsGroup">
+                    <i class="fa-solid fa-star star-icon" data-value="5"></i>
+                    <i class="fa-solid fa-star star-icon" data-value="4"></i>
+                    <i class="fa-solid fa-star star-icon" data-value="3"></i>
+                    <i class="fa-solid fa-star star-icon" data-value="2"></i>
+                    <i class="fa-solid fa-star star-icon" data-value="1"></i>
+                </div>
+                <div class="rating-desc" id="ratingText">الرجاء اختيار التقييم أولاً</div>
+
+                <form id="ratingForm">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>الاسم الكريم <span style="color:red;">*</span></label>
+                            <input type="text" id="rName" class="input-control" placeholder="أدخل اسمك هنا..." required>
+                        </div>
+                        <div class="input-group">
+                            <label>رقم الهاتف <span style="color:red;">*</span></label>
+                            <input type="tel" id="rPhone" class="input-control" placeholder="07X XXX XXXX" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label>البريد <span style="color:red;">*</span></label>
+                            <input type="email" id="rEmail" class="input-control" placeholder="البريد الالكتروني" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>الفرع <span style="color:red;">*</span></label>
+                            <input id="rBranch" class="input-control" placeholder="اكتب الفرع هنا" required>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>شاركنا رأيك بالتفصيل <span style="color:red;">*</span></label>
+                            <textarea id="rFeedback" class="input-control" placeholder="كيف كانت جودة القهوة؟ كيف كان تعامل الموظفين؟" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" id="rSubmit" class="btn-submit-rating">إرسال التقييم للإدارة</button>
+                    <div id="rMsg" class="form-msg"></div>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="mega-footer">
+        <div class="container">
+            <div class="footer-grid">
+                
+                <div class="f-brand" data-aos="fade-up" data-aos-delay="0">
+                    <h3>قهوتنا <span>وبس</span></h3>
+                    <p></p>
+                    <div class="socials">
+                        <a href="contact.html"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="contact.html"><i class="fa-brands fa-snapchat"></i></a>
+                    </div>
+                </div>
+                
+                <div class="f-links" data-aos="fade-up" data-aos-delay="100">
+                    <h4>تصفح الموقع</h4>
+                    <ul>
+                        <li><a href="index.html">الصفحة الرئيسية</a></li>
+                        <li><a href="index.html#menu">قائمة المشروبات (المنيو)</a></li>
+                        <li><a href="index.html#branches">فروعنا المعتمدة</a></li>
+                        <li><a href="bingo.html">لعبة البينجو وكوبونات الخصم</a></li>
+                    </ul>
+                </div>
+                
+                <div class="f-links" data-aos="fade-up" data-aos-delay="200">
+                    <h4>الإدارة والخدمات</h4>
+                    <ul>
+                        <li><a href="jobs.html">بوابة التوظيف الموحدة</a></li>
+                        <li><a href="rating.html">تقييم جودة الخدمة</a></li>
+                        <li><a href="complaints.html">مكتب معالجة الشكاوى</a></li>
+                        <li><a href="login.html" style="color: var(--q-gold);">دخول الإدارة المركزية</a></li>
+                    </ul>
+                </div>
+                
+            </div>
+
+            <div class="f-bottom">
+                <div class="copyright-text">&copy; 2026 جميع الحقوق محفوظة لعلامة "قهوتنا وبس" التجارية.</div>
+                
+                <div class="dev-badge">
+                    <span>System Engineered with <i class="fa-solid fa-heart"></i> by</span>
+                    <a href="#" target="_blank">KARAM GHANDI</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="database.js"></script>
+
+    <script>
+        // --- 1. إزالة Preloader ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 600);
+                }
+            }, 800);
+        });
+
+        // --- 2. الأنيميشن والهيدر ---
+        AOS.init({ once: true, offset: 80, duration: 800, easing: 'ease-out-cubic' });
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // --- MOBILE MENU LOGIC (HAMBURGER) ---
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeMenuBtn');
+
+        if (mobileBtn && mobileNav) {
+            mobileBtn.addEventListener('click', () => { mobileNav.classList.add('active'); });
+        }
+        if (closeBtn && mobileNav) {
+            closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
+        }
+        document.addEventListener('click', (e) => {
+            if (mobileNav && mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && !mobileBtn.contains(e.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // --- 3. نظام النجوم ---
+        let selectedRating = 0;
+        const stars = document.querySelectorAll('.star-icon');
+        const ratingText = document.getElementById('ratingText');
+        const phrases = ["سيء جداً، نحتاج للتحسين", "مقبول، ولكن نتوقع الأفضل", "جيد، شكراً لكم", "رائع جداً، خدمة ممتازة", " أفضل قهوة في الأردن!"];
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.getAttribute('data-value'));
+                stars.forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                let next = this.nextElementSibling;
+                while(next) {
+                    next.classList.add('active');
+                    next = next.nextElementSibling;
+                }
+                ratingText.innerText = phrases[selectedRating - 1];
+            });
+        });
+
+        // --- 4. الربط المصلح مع اللوحة المركزية وتفعيل (التقييم لمرة واحدة) ---
+        document.getElementById('ratingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('rSubmit');
+            const msg = document.getElementById('rMsg');
+            
+            // 🔥 الفحص: هل العميل قام بالتقييم مسبقاً؟
+            if (localStorage.getItem('qahwa_has_rated')) {
+                msg.className = "form-msg msg-error";
+                msg.innerHTML = "لقد قيمت من قبل شكرا لك";
+                msg.style.display = "block";
+                return; // إيقاف العملية وعدم الإرسال للسيرفر
+            }
+
+            if (selectedRating === 0) {
+                msg.className = "form-msg msg-error";
+                msg.innerHTML = "يرجى اختيار عدد النجوم أولاً.";
+                msg.style.display = "block";
+                return;
+            }
+
+            btn.innerHTML = 'جاري الإرسال... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                // إرسال البيانات للفايربيس
+                await db.collection("ratings").add({
+                    rating: selectedRating, 
+                    name: document.getElementById('rName').value.trim() || "زبون مجهول",
+                    phone: document.getElementById('rPhone').value.trim(),
+                    email: document.getElementById('rEmail').value.trim(),
+                    branch: document.getElementById('rBranch').value.trim(),
+                    details: document.getElementById('rFeedback').value.trim(), 
+                    time: Date.now() 
+                });
+                
+                // 🔥 تسجيل أن العميل قام بالتقييم لمنعه في المرات القادمة
+                localStorage.setItem('qahwa_has_rated', 'true');
+                
+                msg.className = "form-msg msg-success";
+                msg.innerHTML = "<i class='fa-solid fa-check-circle'></i> تم إرسال تقييمك بنجاح للوحة القيادة!";
+                msg.style.display = "block";
+                
+                // تصفير الصفحة
+                document.getElementById('ratingForm').reset();
+                stars.forEach(s => s.classList.remove('active'));
+                selectedRating = 0;
+                ratingText.innerText = "الرجاء اختيار التقييم أولاً";
+
+            } catch (error) {
+                msg.className = "form-msg msg-error";
+                msg.innerHTML = "حدث خطأ بالاتصال بالسحابة. تأكد من الإنترنت.";
+                msg.style.display = "block";
+                console.error(error);
+            } finally {
+                btn.innerHTML = 'إرسال التقييم للإدارة';
+                btn.disabled = false;
+                // ما بنخفي رسالة "لقد قيمت من قبل" بسرعة عشان يقرأها العميل
+                if(!localStorage.getItem('qahwa_has_rated')){
+                   setTimeout(() => { if(msg) msg.style.display = "none"; }, 5000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>فستق AI | قهوتنا وبس 🇯🇴</title>
+    
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;800&family=Tajawal:wght@700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root { 
+            --p: #064e3b; --d: #020617; --g: hsl(124, 53%, 64%); --red: hsl(133, 47%, 60%); --bg: #f8fafc; --err: hsl(139, 41%, 54%); 
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'IBM Plex Sans Arabic', sans-serif; }
+        body { background: var(--bg); height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+
+        .full-screen { position:fixed; inset:0; z-index:10000; background:linear-gradient(135deg, var(--d) 0%, var(--p) 100%); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:40px; }
+        .hide { display:none !important; }
+        .btn-auth { background:#fff; color:var(--red); padding:18px 45px; border-radius:60px; font-weight:900; border:none; cursor:pointer; font-size:18px; display:flex; align-items:center; gap:12px; transition:0.3s; border: 2px solid transparent; }
+        .btn-auth:hover { transform:translateY(-5px); background:var(--red); color:#fff; box-shadow: 0 10px 20px rgba(206, 17, 38, 0.3); }
+
+        #shell { width:100%; max-width:100%; height:100vh; background:#fff; display:none; flex-direction:column; position:relative; }
+        #shell.active { display:flex; }
+
+        .shmagh-border { height: 6px; width: 100%; background: repeating-linear-gradient(45deg, var(--red), var(--red) 10px, white 10px, white 20px); }
+
+        .header { background:var(--p); padding:12px 25px; display:flex; justify-content:space-between; align-items:center; color:#fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .profile-box { display:flex; align-items:center; gap:12px; text-align:right; }
+        .profile-box img { width:45px; height:45px; border-radius:50%; border:2px solid var(--g); padding: 2px; background: white; }
+        .profile-info { display:flex; flex-direction:column; }
+        .profile-info b { font-size:15px; color:var(--g); display: flex; align-items: center; gap: 5px; }
+
+        .chat-view { flex:1; padding:25px; overflow-y:auto; background:url('https://www.transparenttextures.com/patterns/arabesque.png') #f1f5f9; display:flex; flex-direction:column; gap:18px; scroll-behavior: smooth; }
+        .msg-row { display: flex; width: 100%; flex-direction: column; animation: slideUp 0.3s ease; }
+        .bubble { max-width:85%; padding:14px 20px; border-radius:20px; font-size:15px; font-weight:700; line-height:1.6; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        
+        .bot { align-items: flex-start; }
+        .bot .bubble { background:#fff; color:var(--d); border-bottom-right-radius:4px; border:1px solid #e2e8f0; border-right: 4px solid var(--red); }
+        .user { align-items: flex-end; }
+        .user .bubble { background:var(--p); color:#fff; border-bottom-left-radius:4px; }
+        .admin { align-items: flex-start; }
+        .admin .bubble { background:rgba(225,29,72,0.05); color:var(--d); border-bottom-right-radius:4px; border:2px solid var(--red); box-shadow: 0 5px 15px rgba(225,29,72,0.15); }
+        .sys { align-items: center; }
+        .sys .bubble { background:var(--g); color:var(--p); font-size:13px; font-weight:900; padding:10px 20px; border-radius:12px; text-align:center; border: 1px solid var(--p); }
+        
+        .sender-tag { font-size: 11px; font-weight: 900; margin-bottom: 5px; opacity: 0.8; display: flex; align-items: center; gap: 5px; }
+        .thinking-dots { color: var(--g); font-size: 24px; letter-spacing: 2px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% {opacity: 0.2;} 50% {opacity: 1;} 100% {opacity: 0.2;} }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        #sideMenu { position:fixed; right:-320px; top:0; bottom:0; width:320px; background:var(--d); z-index:20000; transition:0.4s; padding:40px 25px; color:#fff; border-left:4px solid var(--g); box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+        #sideMenu.open { right:0; }
+        .menu-item { padding:18px; border-radius:15px; background:rgba(255,255,255,0.05); margin-bottom:12px; cursor:pointer; display:flex; align-items:center; gap:15px; font-weight:800; transition:0.3s; }
+        .menu-item:hover { background:rgba(212, 163, 115, 0.1); color:var(--g); transform: translateX(-5px); }
+
+        .footer { padding:15px 20px; background:#fff; border-top:1px solid #eee; }
+        .input-dock { display:flex; align-items:center; background:#f1f5f9; border-radius:50px; padding:8px 8px 8px 20px; border: 2px solid #e2e8f0; transition: 0.3s; }
+        .input-dock:focus-within { border-color: var(--g); box-shadow: 0 0 0 4px rgba(212, 163, 115, 0.1); }
+        .input-dock input { flex:1; border:none; background:transparent; font-weight:800; color:var(--p); font-size:15px; outline: none; }
+        .input-dock input:disabled { color: #94a3b8; }
+        .btn-fire { width:45px; height:45px; border-radius:50%; background:var(--red); color:#fff; border:none; cursor:pointer; font-size:18px; transition: 0.3s; }
+        .btn-fire:hover { transform: scale(1.1); background: var(--p); }
+        .btn-fire:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+
+        #historyBox { position:fixed; inset:0; background:rgba(2, 6, 23, 0.85); backdrop-filter: blur(5px); z-index:30000; display:none; align-items:center; justify-content:center; padding:20px; }
+        .history-content { background:#fff; width:100%; max-width:550px; border-radius:24px; height:85vh; overflow:hidden; display:flex; flex-direction:column; border: 2px solid var(--g); }
+        .history-list { flex:1; overflow-y:auto; padding:20px; display: flex; flex-direction: column; gap: 12px; background: #f8fafc; }
+        .h-item { padding:18px; background:#fff; border-radius:16px; display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
+        .h-item:hover { border-color: var(--g); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(212, 163, 115, 0.15); }
+        .h-info { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+        .h-del { color:var(--err); cursor:pointer; font-size:18px; padding: 10px; background: rgba(206, 17, 38, 0.1); border-radius: 10px; transition: 0.3s; }
+        .h-del:hover { background: var(--err); color: #fff; }
+        .ai-btn { background:var(--p); color:var(--g); padding:12px; border-radius:12px; margin-top:10px; display:inline-flex; align-items:center; justify-content:center; gap:10px; text-decoration:none; font-weight:800; font-size:13px; border: 1px solid var(--g); }
+    </style>
+</head>
+<body>
+
+    <div id="ui-gate" class="full-screen">
+        <img src="logo1.png" style="width:160px; margin-bottom:20px; filter: drop-shadow(0 0 20px rgba(212, 163, 115, 0.4));">
+        <h1 style="color:#fff; font-family:'Tajawal'; font-size: 32px; margin-bottom: 30px;">فستق AI | قهوتنا 🇯🇴</h1>
+        <button class="btn-auth" id="btnLogin"><i class="fa-brands fa-google"></i> دخول النشامى بجوجل</button>
+    </div>
+
+    <div id="ui-ban" class="full-screen hide" style="border:10px solid var(--err);">
+        <i class="fa-solid fa-user-lock" style="font-size:80px; color:var(--err); margin-bottom:20px;"></i>
+        <h2 style="color:#fff; font-family:'Tajawal';">ممنوع الدخول</h2>
+        <p style="color:#ddd; margin:20px 0; font-weight:700; font-size: 18px;">تم رصد كلمة مسيئة: "<span id="bad-word" style="color:var(--err);"></span>"</p>
+        <button class="btn-auth" style="margin-top:30px; border-radius: 12px;" onclick="window.location.href='location.html'"><i class="fa-solid fa-location-dot"></i> مواقع الفروع</button>
+    </div>
+
+    <div id="shell">
+        <div class="shmagh-border"></div>
+        <header class="header">
+            <button class="h-btn" onclick="window.location.href='index.html'" style="background:rgba(255,255,255,0.1); width:40px; height:40px; border-radius:12px; border:none; color:#fff; font-size:20px; cursor: pointer;"><i class="fa-solid fa-house"></i></button>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <img src="logo1.png" style="height:35px;">
+                <span id="ai-status" style="font-size: 10px; color: var(--g); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 2px;">V15.2 ENGINE</span>
+            </div>
+            <div class="profile-box">
+                <div class="profile-info">
+                    <b id="uName">--- 🇯🇴</b>
+                    <span id="uMail" style="font-size:10px; opacity:0.8;">---</span>
+                </div>
+                <img id="uImg" src="">
+                <i class="fa-solid fa-bars-staggered" id="menuToggle" style="font-size:22px; color:var(--g); cursor:pointer; margin-right:10px;"></i>
+            </div>
+        </header>
+
+        <main class="chat-view" id="chatBox"></main>
+
+        <footer class="footer">
+            <div class="input-dock">
+                <input type="text" id="userInput" placeholder="اسأل فستق، أو اطلب لغز يا نشمي..." autocomplete="off">
+                <button class="btn-fire" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </footer>
+    </div>
+
+    <div id="sideMenu">
+        <h3 style="margin-bottom:40px; font-family:'Tajawal'; color:var(--g); font-size: 24px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px;"><i class="fa-solid fa-shield-halved"></i> خيارات السيادة</h3>
+        <div class="menu-item" id="btn-new"><i class="fa-solid fa-plus-circle" style="color: var(--g);"></i> محادثة جديدة</div>
+        <div class="menu-item" id="btn-history"><i class="fa-solid fa-clock-rotate-left" style="color: var(--g);"></i> أرشيف سواليفنا</div>
+        <div class="menu-item" onclick="window.location.href='index.html'"><i class="fa-solid fa-arrow-right-from-bracket" style="color: var(--g);"></i> العودة للرئيسية</div>
+        <div class="menu-item" id="btnLogout" style="color:var(--err); margin-top:50px; border-color: var(--err);"><i class="fa-solid fa-power-off"></i> تسجيل خروج</div>
+    </div>
+
+    <div id="historyBox">
+        <div class="history-content">
+            <header style="padding:25px; background:var(--p); color:#fff; display:flex; justify-content:space-between; align-items: center; border-bottom: 4px solid var(--g);">
+                <b style="font-size: 18px; font-family: 'Tajawal';"><i class="fa-solid fa-box-archive"></i> أرشيف محادثاتك السابقة</b>
+                <button style="background:none; border:none; color:#fff; font-size: 24px; cursor: pointer;" onclick="document.getElementById('historyBox').style.display='none'"><i class="fa-solid fa-circle-xmark"></i></button>
+            </header>
+            <div class="history-list" id="hList"></div>
+        </div>
+    </div>
+
+<script src="apikey1.js"></script>
+
+<script>
+const SupremeSystem = (function() {
+    const config = { 
+        apiKey: "AIzaSyBQLp5FeHaP3vcJfuY22DtGu48j0fyveb0", 
+        authDomain: "qahwtna-b65ca.firebaseapp.com", 
+        projectId: "qahwtna-b65ca"
+    };
+
+    firebase.initializeApp(config);
+    const auth = firebase.auth(), db = firebase.firestore();
+
+    const State = { user: null, history: [], sid: '', needsHuman: false, inputLocked: false, unsub: null };
+    const HardBans = ["كس", "خرا", "يلعن", "زب", "طيز", "شرموط", "منيك", "حقير"];
+    const SoftBans = ["يع", "مقرف", "اكرهك"];
+
+    const UI = {
+        gate: document.getElementById('ui-gate'), shell: document.getElementById('shell'),
+        ban: document.getElementById('ui-ban'), box: document.getElementById('chatBox'),
+        inp: document.getElementById('userInput'), send: document.getElementById('sendBtn'),
+        menu: document.getElementById('sideMenu'), toggle: document.getElementById('menuToggle')
+    };
+
+    return {
+        init() {
+            auth.onAuthStateChanged(async u => {
+                if (u) {
+                    State.user = u;
+                    const banned = await db.collection('banned_users').doc(u.email).get();
+                    if(banned.exists) {
+                        this.showBan(banned.data().word_used);
+                    } else {
+                        this.unlock(u);
+                    }
+                } else { this.lock(); }
+            });
+
+            document.getElementById('btnLogin').onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+            document.getElementById('btnLogout').onclick = () => auth.signOut();
+            UI.send.onclick = () => this.handle();
+            UI.inp.onkeypress = e => { if(e.key === 'Enter') this.handle(); };
+            UI.toggle.onclick = () => UI.menu.classList.toggle('open');
+            document.getElementById('btn-new').onclick = () => { UI.menu.classList.remove('open'); this.start(); };
+            document.getElementById('btn-history').onclick = () => { UI.menu.classList.remove('open'); this.showHistory(); };
+        },
+
+        unlock(u) {
+            UI.gate.classList.add('hide'); UI.shell.classList.add('active');
+            document.getElementById('uName').innerHTML = `${u.displayName.split(' ')[0]} 🇯🇴`;
+            document.getElementById('uMail').innerText = u.email;
+            document.getElementById('uImg').src = u.photoURL;
+            
+            let savedSid = localStorage.getItem('qahwtna_session');
+            if(savedSid) { this.loadChat(savedSid); } else { this.start(); }
+        },
+
+        lock() { UI.shell.classList.remove('active'); UI.gate.classList.remove('hide'); },
+
+        showBan(word) {
+            UI.gate.classList.add('hide'); UI.shell.classList.remove('active');
+            UI.ban.classList.remove('hide');
+            document.getElementById('bad-word').innerText = word;
+        },
+
+        async start() {
+            State.history = []; State.needsHuman = false; State.inputLocked = false;
+            State.sid = "FSTQ-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+            localStorage.setItem('qahwtna_session', State.sid);
+            
+            await db.collection('chats').doc(State.sid).set({
+                refId: State.sid, 
+                userEmail: State.user.email,
+                uid: State.user.uid,
+                needsHuman: false,
+                inputLocked: false,
+                messages: [{ role: 'assistant', content: 'حياك الله يا نشمي! أنا فستق.. شو حابب نلعب اليوم؟ حزورة عن القهوة ولا اطلبلك من المنيو؟ ☕✨', time: Date.now() }], 
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            this.listenToChat();
+        },
+
+        listenToChat() {
+            if(State.unsub) State.unsub();
+            
+            State.unsub = db.collection('chats').doc(State.sid).onSnapshot(doc => {
+                if(doc.exists) {
+                    const data = doc.data();
+                    State.history = data.messages || [];
+                    State.needsHuman = data.needsHuman || false;
+                    State.inputLocked = data.inputLocked || false;
+                    
+                    if(State.needsHuman) {
+                        document.getElementById('ai-status').innerHTML = '<i class="fa-solid fa-headset"></i> الإدارة متصلة';
+                        document.getElementById('ai-status').style.color = 'var(--red)';
+                    } else {
+                        document.getElementById('ai-status').innerHTML = 'V15.2 ENGINE';
+                        document.getElementById('ai-status').style.color = 'var(--g)';
+                    }
+                    
+                    if(State.inputLocked) {
+                        UI.inp.disabled = true; UI.send.disabled = true;
+                        UI.inp.placeholder = "🔒 الإدارة أوقفت ميزة الكتابة مؤقتاً...";
+                    } else {
+                        UI.inp.disabled = false; UI.send.disabled = false;
+                        UI.inp.placeholder = "اسأل فستق، أو اطلب لغز يا نشمي...";
+                    }
+                    
+                    this.renderMessages();
+                } else {
+                    localStorage.removeItem('qahwtna_session');
+                    if(State.unsub) State.unsub();
+                    this.start();
+                }
+            });
+        },
+
+        renderMessages() {
+            UI.box.innerHTML = '';
+            State.history.forEach(m => {
+                // إخفاء الشفرة السرية عن عين الزبون (لكنها موجودة بالداتا بيز للبانيل)
+                if(m.content === 'TRANSFER_TO_HUMAN_SUPPORT') return; 
+                if(m.content.includes('thinking-dots')) return; 
+
+                const row = document.createElement('div'); 
+                const bbl = document.createElement('div'); bbl.className = 'bubble';
+                let txt = m.content;
+
+                if(m.role === 'user') { row.className = 'msg-row user'; } 
+                else if(m.role === 'admin') { row.className = 'msg-row admin'; txt = `<div class="sender-tag" style="color:var(--red)"><i class="fa-solid fa-headset"></i> خدمة العملاء (الإدارة)</div>${txt}`; } 
+                else if(m.role === 'system') { row.className = 'msg-row sys'; } 
+                else {
+                    row.className = 'msg-row bot';
+                    txt = `<div class="sender-tag" style="color:var(--p)"><i class="fa-solid fa-robot"></i> فستق</div>${txt}`;
+                    const links = [{ k: 'menu.html', t: 'المنيو ☕', u: 'menu.html' }, { k: 'location.html', t: 'مواقع الفروع 📍', u: 'location.html' }];
+                    links.forEach(l => { if(txt.includes(l.k)) txt = txt.replace(l.k, `<br><a class="ai-btn" href="${l.u}" target="_blank"><i class="fa-solid fa-link"></i> ${l.t}</a>`); });
+                }
+                
+                bbl.innerHTML = txt; row.appendChild(bbl); UI.box.appendChild(row);
+            });
+            UI.box.scrollTop = UI.box.scrollHeight;
+        },
+
+        async handle() {
+            const val = UI.inp.value.trim();
+            if(!val || State.inputLocked) return; // منع الإرسال إذا الكيبورد مقفول
+
+            const bad = HardBans.find(w => val.includes(w));
+            if(bad) {
+                UI.inp.disabled = true; UI.send.disabled = true;
+                await db.collection('banned_users').doc(State.user.email).set({ email: State.user.email, word_used: bad, timestamp: Date.now() });
+                await db.collection('movements').add({ type: "حظر أمني (AI)", details: `حظر ${State.user.email} لاستخدام كلمة (${bad})`, time: Date.now() });
+                this.showBan(bad); 
+                return; 
+            }
+
+            UI.inp.disabled = true; UI.send.disabled = true; UI.inp.value = '';
+
+            const newMsg = { role: 'user', content: val, time: Date.now() };
+            let updatedHistory = [...State.history, newMsg];
+            
+            await db.collection('chats').doc(State.sid).set({ 
+                refId: State.sid, userEmail: State.user.email, uid: State.user.uid, messages: updatedHistory, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            const soft = SoftBans.find(w => val.includes(w));
+            if(soft) {
+                setTimeout(async () => {
+                    updatedHistory.push({ role: 'assistant', content: `إنت ${val} وأنا كمان بكرهك! خلونا نحكي بالقهوة أحسن يا غالي! 😝☕`, time: Date.now() });
+                    await db.collection('chats').doc(State.sid).set({ messages: updatedHistory }, { merge: true });
+                }, 600);
+                return;
+            }
+
+            // إذا الإدارة مستلمة، بنرسل الرسالة للداتا بيز وبنوقف هون (عشان فستق ما يرد)
+            if(State.needsHuman) {
+                UI.inp.disabled = false; UI.send.disabled = false; UI.inp.focus();
+                return;
+            }
+
+            const thinkId = 'think-' + Date.now();
+            const row = document.createElement('div'); row.className = 'msg-row bot'; row.id = thinkId;
+            row.innerHTML = `<div class="bubble"><span class="thinking-dots">...</span></div>`;
+            UI.box.appendChild(row); UI.box.scrollTop = UI.box.scrollHeight;
+
+            try {
+                const historyForAI = updatedHistory.slice(-6).map(m => ({ role: m.role, content: m.content }));
+                const reply = await window.getAIResponse(val, historyForAI);
+                
+                if(document.getElementById(thinkId)) document.getElementById(thinkId).remove();
+
+                if(reply === 'TRANSFER_TO_HUMAN_SUPPORT') {
+                    // 🚨 السحر هون: رجعنا نبعث الشفرة عشان البانيل تبعتك تشوفها وتضوي أحمر 🚨
+                    updatedHistory.push({ role: 'system', content: 'TRANSFER_TO_HUMAN_SUPPORT', time: Date.now() });
+                    updatedHistory.push({ role: 'system', content: '<i class="fa-solid fa-bell-concierge"></i> تم إيقاف فستق مؤقتاً. جاري تحويلك للإدارة، ثواني وبنرد عليك يا نشمي...', time: Date.now() });
+                    
+                    await db.collection('chats').doc(State.sid).set({ needsHuman: true, messages: updatedHistory, timestamp: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+                } else {
+                    updatedHistory.push({ role: 'assistant', content: reply, time: Date.now() });
+                    await db.collection('chats').doc(State.sid).set({ messages: updatedHistory, timestamp: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+                }
+
+                if(updatedHistory.length === 3) {
+                    const newTitle = await window.getSmartTitle([{role: 'user', content: val}]);
+                    await db.collection('chats').doc(State.sid).set({ userEmail: newTitle }, { merge: true });
+                }
+            } catch(e) {
+                if(document.getElementById(thinkId)) document.getElementById(thinkId).remove();
+            }
+            
+            UI.inp.disabled = false; UI.send.disabled = false; UI.inp.focus();
+        },
+
+        async showHistory() {
+            const list = document.getElementById('hList'); 
+            list.innerHTML = '<div style="text-align:center; padding: 20px; font-weight: bold; color: var(--p);"><i class="fa-solid fa-spinner fa-spin"></i> جاري استدعاء الأرشيف...</div>';
+            document.getElementById('historyBox').style.display = 'flex';
+            
+            try {
+                const snap = await db.collection('chats').where('uid', '==', State.user.uid).get();
+                list.innerHTML = '';
+                if (snap.empty) { list.innerHTML = '<div style="text-align:center; padding: 20px; font-weight: bold; color: #64748b;">لا يوجد سواليف سابقة بيننا!</div>'; return; }
+
+                let docs = []; snap.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+                docs.sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
+
+                docs.forEach(d => {
+                    const item = document.createElement('div'); item.className = 'h-item';
+                    let preview = d.messages && d.messages.length > 0 ? d.messages[d.messages.length-1].content.substring(0, 30) + '...' : 'محادثة سابقة';
+                    let statusIcon = d.needsHuman ? '<i class="fa-solid fa-headset" style="color:var(--red)"></i>' : '<i class="fa-solid fa-robot" style="color:var(--g)"></i>';
+                    
+                    item.innerHTML = `
+                        <div class="h-info" onclick="SupremeSystem.loadChat('${d.id}')">
+                            <b style="color: var(--p);">${statusIcon} ${d.userEmail || 'سواليف'}</b>
+                            <small style="color: #64748b; font-family: 'Orbitron'; direction: ltr; text-align: right;">${new Date(d.timestamp?.toMillis() || Date.now()).toLocaleDateString('ar-EG')} - ${d.refId}</small>
+                        </div>
+                        <i class="fa-solid fa-trash-can h-del" onclick="event.stopPropagation(); SupremeSystem.delChat('${d.id}')" title="مسح المحادثة"></i>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (error) { list.innerHTML = '<div style="text-align:center; color: var(--err); font-weight: bold;">تعذر جلب الأرشيف!</div>'; }
+        },
+
+        async loadChat(id) {
+            localStorage.setItem('qahwtna_session', id); State.sid = id;
+            document.getElementById('historyBox').style.display = 'none';
+            this.listenToChat(); 
+        },
+
+        async delChat(id) {
+            if(confirm("سيتم حذف هذه المحادثة. متأكد يا غالي؟")) {
+                await db.collection('chats').doc(id).delete();
+                if(State.sid === id) { localStorage.removeItem('qahwtna_session'); this.start(); }
+                this.showHistory();
+            }
+        }
+    };
+})();
+window.SupremeSystem = SupremeSystem;
+window.addEventListener('DOMContentLoaded', () => SupremeSystem.init());
+</script>
+</body>
+</html>

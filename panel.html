@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لوحة التحكم | قهوتنا وبس</title>
+    <meta name="author" content="Karam Ghandi">
+    
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Tajawal:wght@700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* ==========================================================================
+           [1] IMPERIAL DESIGN SYSTEM (ULTRA DARK MODE)
+           ========================================================================== */
+        :root {
+            --sys-bg: #f0f4f8;         --sys-surface: #ffffff;
+            --sys-sidebar: #020617;    --sys-sidebar-hover: #0f172a;
+            --sys-gold: hwb(120 66% 8%);       --sys-gold-dim: rgba(212, 175, 55, 0.15);
+            --sys-primary: #0f172a;    --sys-accent: #1e293b;
+            --sys-text: #0f172a;       --sys-text-dim: #64748b;
+            --sys-danger: #e11d48;     --sys-success: #10b981;
+            --sys-border: #e2e8f0;     --sys-radius: 24px;
+            --sys-shadow-soft: 0 10px 25px rgba(0,0,0,0.03);
+            --sys-shadow-hard: 0 20px 50px rgba(2, 6, 23, 0.15);
+            --trans: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ==========================================================================
+           [2] GLOBAL RESET & SCROLLBAR
+           ========================================================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; font-family: 'IBM Plex Sans Arabic', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--sys-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--sys-gold); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--sys-primary); }
+
+        body { background: var(--sys-bg); color: var(--sys-text); display: flex; height: 100vh; overflow: hidden; font-size: 15px; }
+
+        /* ==========================================================================
+           [3] SIDEBAR ARCHITECTURE (The Command Center)
+           ========================================================================== */
+        .sidebar { width: 320px; background: var(--sys-sidebar); display: flex; flex-direction: column; z-index: 1000; box-shadow: 10px 0 40px rgba(0,0,0,0.1); position: relative; }
+        .sidebar::after { content: ''; position: absolute; top: 0; right: 0; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--sys-gold), transparent); opacity: 0.3; }
+        
+        .brand-cortex { padding: 45px 20px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+        .brand-cortex::before { content: ''; position: absolute; top: -50px; left: -50px; width: 180px; height: 180px; background: radial-gradient(circle, var(--sys-gold-dim) 0%, transparent 70%); border-radius: 50%; }
+        .brand-cortex img { width: 90px; filter: drop-shadow(0 0 20px var(--sys-gold-dim)); position: relative; z-index: 2; transition: var(--trans); }
+        .brand-cortex img:hover { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4)); }
+        .brand-cortex h2 { color: #fff; font-family: 'Tajawal'; margin-top: 18px; font-size: 24px; position: relative; z-index: 2; font-weight: 900; letter-spacing: 0.5px; }
+        .brand-cortex span { color: var(--sys-gold); font-size: 11px; letter-spacing: 3px; font-weight: 900; display: block; margin-top: 5px; font-family: 'Orbitron'; }
+        
+        .nav-menu { flex: 1; overflow-y: auto; padding: 25px 20px; list-style: none; }
+        .nav-item { display: flex; align-items: center; gap: 18px; padding: 15px 20px; color: #94a3b8; cursor: pointer; border-radius: 16px; margin-bottom: 8px; transition: var(--trans); font-weight: 600; font-size: 14px; border: 1px solid transparent; position: relative; overflow: hidden; }
+        .nav-item i { width: 25px; text-align: center; color: var(--sys-gold); font-size: 18px; transition: var(--trans); z-index: 2; }
+        .nav-item span { z-index: 2; position: relative; }
+        .nav-item::before { content: ''; position: absolute; inset: 0; background: var(--sys-gold); opacity: 0; transition: var(--trans); z-index: 1; }
+        
+        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.05); }
+        .nav-item.active { color: var(--sys-sidebar); border-color: var(--sys-gold); font-weight: 800; box-shadow: 0 10px 25px var(--sys-gold-dim); }
+        .nav-item.active::before { opacity: 1; }
+        .nav-item.active i { color: var(--sys-sidebar); transform: scale(1.15); }
+
+        .sys-footer { padding: 30px 25px; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.3); }
+        .dev-badge { display: flex; align-items: center; justify-content: center; gap: 8px; color: #64748b; font-size: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .dev-badge span { color: var(--sys-gold); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 1px; }
+        
+        .btn-logout { width: 100%; padding: 16px; border-radius: 14px; background: rgba(225,29,72,0.1); color: var(--sys-danger); border: 1px solid rgba(225,29,72,0.2); cursor: pointer; font-weight: 800; transition: var(--trans); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; }
+        .btn-logout:hover { background: var(--sys-danger); color: #fff; box-shadow: 0 10px 25px rgba(225,29,72,0.3); }
+
+        /* ==========================================================================
+           [4] MAIN STAGE & HEADER
+           ========================================================================== */
+        .stage { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sys-border); z-index: 100; box-shadow: var(--sys-shadow-soft); }
+        .header-content h1 { font-family: 'Tajawal'; font-size: 28px; color: var(--sys-primary); letter-spacing: -0.5px; }
+        .header-content p { color: var(--sys-text-dim); font-size: 13px; margin-top: 8px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .pulse-dot { width: 10px; height: 10px; background: var(--sys-success); border-radius: 50%; box-shadow: 0 0 0 rgba(16, 185, 129, 0.4); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+        .user-shield { display: flex; align-items: center; gap: 18px; background: var(--sys-surface); padding: 10px 30px 10px 10px; border-radius: 50px; border: 1px solid var(--sys-border); box-shadow: var(--sys-shadow-soft); }
+        .user-shield img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--sys-gold); object-fit: cover; padding: 2px; }
+        .user-shield .u-info { display: flex; flex-direction: column; text-align: left; }
+        .user-shield .u-name { font-weight: 800; font-size: 15px; color: var(--sys-primary); }
+        .user-shield .u-role { font-size: 11px; color: var(--sys-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+        .viewport { flex: 1; overflow-y: auto; padding: 40px 50px; scroll-behavior: smooth; }
+        .tab-layer { display: none; opacity: 0; transform: translateY(20px); transition: var(--trans); }
+        .tab-layer.active { display: block; opacity: 1; transform: translateY(0); animation: smoothEntry 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes smoothEntry { to { opacity: 1; transform: translateY(0); } }
+
+        /* ==========================================================================
+           [5] DASHBOARD COMPONENTS
+           ========================================================================== */
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: var(--sys-surface); padding: 25px; border-radius: var(--sys-radius); border: 1px solid var(--sys-border); box-shadow: var(--sys-shadow-soft); display: flex; align-items: center; gap: 20px; transition: var(--trans); position: relative; overflow: hidden; cursor: default; }
+        .stat-card::after { content: ''; position: absolute; top: 0; right: 0; width: 6px; height: 100%; background: var(--sys-gold); opacity: 0; transition: var(--trans); }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: var(--sys-shadow-hard); border-color: var(--sys-gold); }
+        .stat-card:hover::after { opacity: 1; }
+        .stat-card i { font-size: 28px; color: var(--sys-gold); background: var(--sys-gold-dim); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 18px; transition: var(--trans); }
+        .stat-card:hover i { transform: scale(1.1) rotate(5deg); }
+        .stat-card div { flex: 1; }
+        .stat-card h4 { font-size: 13px; color: var(--sys-text-dim); font-weight: 800; margin-bottom: 5px; }
+        .stat-card span { font-size: 28px; font-weight: 900; font-family: 'Orbitron'; color: var(--sys-primary); letter-spacing: -1px; }
+
+        .sys-panel { background: var(--sys-surface); padding: 40px; border-radius: var(--sys-radius); border: 1px solid var(--sys-border); box-shadow: var(--sys-shadow-soft); margin-bottom: 40px; position: relative; }
+        .sys-panel h3 { font-family: 'Tajawal'; margin-bottom: 30px; font-size: 22px; color: var(--sys-primary); display: flex; align-items: center; gap: 15px; padding-bottom: 20px; position: relative; }
+        .sys-panel h3::after { content: ''; position: absolute; bottom: 0; right: 0; width: 60px; height: 4px; background: var(--sys-gold); border-radius: 2px; }
+        .sys-panel h3 i { color: var(--sys-gold); background: var(--sys-gold-dim); padding: 12px; border-radius: 12px; font-size: 20px; }
+
+        /* ==========================================================================
+           [6] ADVANCED FORMS & TABLES
+           ========================================================================== */
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        .form-group { display: flex; flex-direction: column; gap: 10px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { font-size: 14px; font-weight: 800; color: var(--sys-primary); display: flex; align-items: center; gap: 8px; }
+        .form-control { padding: 18px 20px; border: 2px solid var(--sys-border); border-radius: 14px; font-size: 14px; transition: var(--trans); background: var(--sys-bg); color: var(--sys-text); font-family: inherit; font-weight: 600; }
+        .form-control:focus { border-color: var(--sys-gold); background: #fff; box-shadow: 0 0 0 4px var(--sys-gold-dim); }
+        textarea.form-control { resize: vertical; min-height: 120px; line-height: 1.8; }
+        
+        .btn-primary { background: var(--sys-primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-family: 'Tajawal'; font-size: 16px; cursor: pointer; transition: var(--trans); box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15); display: inline-flex; justify-content: center; align-items: center; gap: 12px; }
+        .btn-primary:hover { background: var(--sys-gold); box-shadow: 0 15px 30px var(--sys-gold-dim); transform: translateY(-3px); color: var(--sys-primary); }
+        .btn-primary:disabled { background: var(--sys-text-dim); cursor: not-allowed; transform: none; box-shadow: none; color: #fff; }
+
+        .table-wrapper { overflow-x: auto; border-radius: 16px; border: 1px solid var(--sys-border); background: #fff; box-shadow: var(--sys-shadow-soft); }
+        .sys-table { width: 100%; border-collapse: collapse; text-align: right; }
+        .sys-table th { padding: 20px; background: #f8fafc; color: var(--sys-text-dim); font-size: 13px; font-weight: 800; border-bottom: 2px solid var(--sys-border); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sys-table td { padding: 18px 20px; border-bottom: 1px solid var(--sys-border); font-size: 14px; font-weight: 600; vertical-align: middle; transition: var(--trans); }
+        .sys-table tr:hover td { background: #f8fafc; }
+        .sys-table tr:last-child td { border-bottom: none; }
+
+        .act-btn { width: 35px; height: 35px; border-radius: 10px; border: none; cursor: pointer; font-size: 14px; transition: var(--trans); display: inline-flex; justify-content: center; align-items: center; }
+        .act-del { background: rgba(225,29,72,0.1); color: var(--sys-danger); }
+        .act-del:hover { background: var(--sys-danger); color: #fff; transform: scale(1.1); box-shadow: 0 5px 15px rgba(225,29,72,0.3); }
+        .act-view { background: rgba(197, 160, 89, 0.1); color: var(--sys-gold); text-decoration: none; font-size: 14px; font-weight: 800; padding: 8px 15px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; }
+        .act-view:hover { background: var(--sys-gold); color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px var(--sys-gold-dim); }
+
+        .file-toggle { display: flex; gap: 30px; margin-bottom: 5px; background: var(--sys-bg); padding: 15px 25px; border-radius: 14px; border: 2px solid var(--sys-border); width: fit-content; }
+        .file-toggle label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 800; color: var(--sys-primary); margin: 0; }
+        .file-toggle input[type="radio"] { accent-color: var(--sys-gold); transform: scale(1.4); cursor: pointer; }
+
+        /* Badges */
+        .badge { padding: 6px 14px; border-radius: 50px; font-size: 12px; font-weight: 900; display: inline-block; font-family: 'IBM Plex Sans Arabic', sans-serif; letter-spacing: 0.5px; }
+        .b-hot { background: rgba(225,29,72,0.1); color: var(--sys-danger); border: 1px solid rgba(225,29,72,0.2); }
+        .b-cold { background: rgba(16, 185, 129, 0.1); color: var(--sys-success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .b-sweet { background: rgba(197, 160, 89, 0.1); color: #b48600; border: 1px solid rgba(197, 160, 89, 0.2); }
+        .b-dark { background: var(--sys-primary); color: #fff; border: 1px solid var(--sys-primary); font-family: 'Orbitron', sans-serif;}
+
+        /* ==========================================================================
+           [7] MODALS & SECURITY NOTIFICATIONS 
+           ========================================================================== */
+        #security-shield { position: fixed; inset: 0; background: #020617; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; }
+        #security-shield i { font-size: 100px; color: var(--sys-gold); margin-bottom: 30px; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.3)); animation: scan 2s infinite alternate; }
+        @keyframes scan { from { transform: translateY(-10px); } to { transform: translateY(10px); } }
+        
+        #toast-container { position: fixed; bottom: 40px; left: 40px; z-index: 9999; display: flex; flex-direction: column; gap: 15px; }
+        .sys-toast { background: var(--sys-primary); color: #fff; padding: 20px 30px; border-radius: 16px; box-shadow: var(--sys-shadow-hard); border-right: 8px solid var(--sys-success); display: flex; align-items: center; gap: 15px; font-weight: 800; font-size: 15px; animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; min-width: 300px; }
+        .sys-toast.error { border-right-color: var(--sys-danger); }
+        .sys-toast.info { border-right-color: var(--sys-gold); }
+        .sys-toast i { font-size: 24px; }
+        @keyframes slideIn { from { transform: translateX(-150%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(30px); } }
+
+        /* AI Chat Modal Styles */
+        #chatModal { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.85); z-index: 99999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .chat-modal-content { background: #fff; width: 90%; max-width: 600px; height: 85vh; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; border: 2px solid var(--sys-gold); box-shadow: var(--sys-shadow-hard); }
+        .chat-modal-header { background: var(--sys-sidebar); color: var(--sys-gold); padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; font-family: 'Tajawal'; font-size: 20px; border-bottom: 3px solid var(--sys-gold); }
+        .chat-modal-body { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #f8fafc; }
+        .msg-bubble { max-width: 85%; padding: 15px 20px; border-radius: 20px; font-size: 14px; line-height: 1.6; font-weight: 600; }
+        .msg-bot { background: #fff; align-self: flex-start; border-bottom-right-radius: 0; border: 1px solid var(--sys-border); color: var(--sys-primary); box-shadow: var(--sys-shadow-soft); }
+        .msg-user { background: var(--sys-primary); color: #fff; align-self: flex-end; border-bottom-left-radius: 0; box-shadow: var(--sys-shadow-soft); }
+
+    </style>
+</head>
+<body>
+
+    <div id="security-shield">
+        <i class="fa-solid fa-fingerprint"></i>
+        <h2 style="font-family:'Tajawal'; font-size:36px; margin-bottom:15px; font-weight:900;">بوابة العبور السيادية</h2>
+        <p style="color:#94a3b8; font-size:18px; font-weight:600;" id="shield-msg">جاري فك التشفير ومطابقة الصلاحيات...</p>
+    </div>
+
+    <aside class="sidebar">
+        <div class="brand-cortex">
+            <img src="logo1.png" alt="Logo">
+            <h2>قهوتنا وبس</h2>
+            <span>SYSTEM COMMAND V.MAX</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="app.switchTab('t-dash')"><i class="fa-solid fa-chart-line"></i> <span>لوحة القيادة</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-aichats')"><i class="fa-solid fa-robot"></i> <span>محادثات فستق</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-bans')"><i class="fa-solid fa-user-lock"></i> <span>المحظورين (AI)</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-movements')"><i class="fas fa-newspaper"></i> <span>سجل الحركات</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-menu')"><i class="fa-solid fa-mug-hot"></i> <span>القائمة السحابية</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-news')"><i class="fa-solid fa-newspaper"></i> <span>المركز الإعلامي</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-ratings')"><i class="fa-solid fa-star-half-stroke"></i> <span>رصد التقييمات</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-complaints')"><i class="fa-solid fa-shield-halved"></i> <span>الشكاوى المركزية</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-contact')"><i class="fa-solid fa-satellite-dish"></i> <span>المنصات والروابط</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-branches')"><i class="fa-solid fa-location-dot"></i> <span>إدارة الفروع</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-jobs')"><i class="fa-solid fa-user-tie"></i> <span>الموارد البشرية</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-bingo')"><i class="fa-solid fa-ticket-simple"></i> <span>نظام البينجو</span></li>
+            <li class="nav-item" onclick="app.switchTab('t-emails')"><i class="fa-solid fa-envelope-open-text"></i> <span>النشرة البريدية</span></li>
+        </ul>
+        <div class="sys-footer">
+            <div class="dev-badge"><i class="fa-solid fa-code" style="color:var(--sys-gold)"></i> Engineered by <span>KARAM GHANDI</span></div>
+            <button class="btn-logout" onclick="app.logout()"><i class="fa-solid fa-power-off"></i> إنهاء الجلسة أمنياً</button>
+        </div>
+    </aside>
+
+    <main class="stage">
+        <header class="header">
+            <div class="header-content">
+                <h1 id="greeting-txt">أهلاً بك...</h1>
+                <p><span class="pulse-dot"></span> السيرفرات مستقرة. بروتوكول المزامنة الحيّة مفعل.</p>
+            </div>
+            <div class="user-shield">
+                <div class="u-info">
+                    <span class="u-name" id="display-name">جاري المزامنة</span>
+                    <span class="u-role">Master Admin</span>
+                </div>
+                <img id="u-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Admin">
+            </div>
+        </header>
+
+        <div class="viewport">
+            
+            <div id="t-dash" class="tab-layer active">
+                <div class="grid-stats">
+                    <div class="stat-card"><i class="fa-solid fa-mug-hot"></i><div><h4>الأصناف بالمنيو</h4><span id="st-menu">0</span></div></div>
+                    <div class="stat-card"><i class="fa-solid fa-robot" style="color:#8b5cf6; background:rgba(139,92,246,0.1)"></i><div><h4>محادثات الذكاء</h4><span id="st-chats">0</span></div></div>
+                    <div class="stat-card"><i class="fa-solid fa-newspaper" style="color:#0ea5e9; background:rgba(14,165,233,0.1)"></i><div><h4>الأخبار المنشورة</h4><span id="st-news">0</span></div></div>
+                    <div class="stat-card"><i class="fa-solid fa-user-lock" style="color:var(--sys-danger); background:rgba(225,29,72,0.1)"></i><div><h4>المحظورين أمنياً</h4><span id="st-bans">0</span></div></div>
+                    <div class="stat-card"><i class="fa-solid fa-envelope-circle-check" style="color:var(--sys-success); background:rgba(16,185,129,0.1)"></i><div><h4>مشتركي النشرة</h4><span id="st-emails">0</span></div></div>
+                    <div class="stat-card"><i class="fa-solid fa-triangle-exclamation" style="color:var(--sys-gold); background:var(--sys-gold-dim)"></i><div><h4>شكاوى معلقة</h4><span id="st-complaints">0</span></div></div>
+                </div>
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-chart-area"></i> مخطط النبض العام للسيرفر</h3>
+                    <canvas id="sysChart" height="60"></canvas>
+                </div>
+            </div>
+
+            <div id="t-aichats" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-robot"></i> أرشيف محادثات الذكاء الاصطناعي (فستق)</h3>
+                    <p style="color:var(--sys-text-dim); font-weight:700; margin-bottom:25px;">تتيح لك هذه الواجهة مراجعة ما يدور بين الزبائن وفستق لضمان جودة الخدمة.</p>
+                    <div class="table-wrapper">
+                        <table class="sys-table">
+                            <thead><tr><th>المعرف المرجعي (ID)</th><th>إيميل الزبون</th><th>الوقت والتاريخ</th><th>عرض السجل</th></tr></thead>
+                            <tbody id="tb-chats"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-bans" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-user-lock"></i> قائمة المحظورين أمنياً (AI Bans)</h3>
+                    <p style="color:var(--sys-text-dim); font-weight:700; margin-bottom:25px;">الزبائن الذين تم حظرهم تلقائياً بواسطة فستق بسبب استخدام ألفاظ نابية.</p>
+                    <div class="table-wrapper">
+                        <table class="sys-table">
+                            <thead><tr><th>الإيميل المحظور</th><th>الكلمة المسيئة (السبب)</th><th>وقت الحظر</th><th>فك الحظر</th></tr></thead>
+                            <tbody id="tb-bans"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-movements" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-radar"></i> السجل الاستخباراتي (الحركات والنشاطات)</h3>
+                    <p style="color:var(--sys-text-dim); font-weight:700; margin-bottom:25px;">يتم هنا تسجيل أي نشاط أو تعديل يتم إجراؤه داخل النظام من قبل المدراء لضمان الرقابة التامة.</p>
+                    <div class="table-wrapper">
+                        <table class="sys-table">
+                            <thead><tr><th>نوع الحركة</th><th>التفاصيل والوصف</th><th>وقت التنفيذ الدقيق</th></tr></thead>
+                            <tbody id="tb-movements"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-menu" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-plus-circle"></i> إضافة صنف جديد</h3>
+                    <form id="frm-menu" class="form-grid">
+                        <div class="form-group full">
+                            <label>مصدر الصورة</label>
+                            <div class="file-toggle">
+                                <label><input type="radio" name="imgType" value="url" checked onchange="app.toggleImgInput('url', 'menu-img-url', 'menu-img-file')"> إدراج رابط (URL)</label>
+                                <label><input type="radio" name="imgType" value="file" onchange="app.toggleImgInput('file', 'menu-img-url', 'menu-img-file')"> رفع ملف (Upload)</label>
+                            </div>
+                            <input type="url" id="menu-img-url" class="form-control" placeholder="أدخل الرابط المباشر..." required>
+                            <input type="file" id="menu-img-file" class="form-control" accept="image/*" style="display:none;">
+                        </div>
+                        <div class="form-group"><label>اسم الصنف</label><input type="text" id="menu-name" class="form-control" required></div>
+                        <div class="form-group"><label>السعر (دينار)</label><input type="number" step="0.05" id="menu-price" class="form-control" required></div>
+                        
+                        <div class="form-group full"><label>التصنيف الدقيق (مطلوب)</label>
+                            <select id="menu-type" class="form-control" required>
+                                <option value="" disabled selected>-- يرجى اختيار التصنيف من هنا --</option>
+                                <option value="ساخن">مشروبات ساخنة ☕</option>
+                                <option value="بارد">مشروبات باردة ❄️</option>
+                                <option value="حلويات">حلويات  🍰</option>
+                            </select>
+                        </div>
+                        <div class="form-group full"><label>الوصف والمكونات</label><textarea id="menu-desc" class="form-control" required></textarea></div>
+                        <div class="form-group full"><button type="submit" class="btn-primary" id="btn-save-menu"><i class="fa-solid fa-cloud-arrow-up"></i> تشفير وحفظ الصنف</button></div>
+                    </form>
+                </div>
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-list-check"></i> قاعدة البيانات الحية للأصناف</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table">
+                            <thead><tr><th>صورة</th><th>الاسم</th><th>السعر</th><th>التصنيف</th><th>الوصف</th><th>حذف</th></tr></thead>
+                            <tbody id="tb-menu"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-news" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-newspaper"></i> إضافة خبر إعلامي جديد</h3>
+                    <form id="frm-news" class="form-grid">
+                        <div class="form-group full">
+                            <label>صورة الخبر الرئيسية</label>
+                            <div class="file-toggle">
+                                <label><input type="radio" name="newsImgType" value="url" checked onchange="app.toggleImgInput('url', 'news-img-url', 'news-img-file')"> إدراج رابط (URL)</label>
+                                <label><input type="radio" name="newsImgType" value="file" onchange="app.toggleImgInput('file', 'news-img-url', 'news-img-file')"> رفع ملف (Upload)</label>
+                            </div>
+                            <input type="url" id="news-img-url" class="form-control" placeholder="أدخل الرابط المباشر للصورة..." required>
+                            <input type="file" id="news-img-file" class="form-control" accept="image/*" style="display:none;">
+                        </div>
+                        <div class="form-group"><label>عنوان الخبر</label><input type="text" id="news-title" class="form-control" placeholder="مثال: افتتاح فرعنا الجديد" required></div>
+                        <div class="form-group"><label>تاريخ النشر المعتمد</label><input type="date" id="news-date" class="form-control" required></div>
+                        <div class="form-group full"><label>التفاصيل ومحتوى الخبر</label><textarea id="news-desc" class="form-control" placeholder="اكتب التفاصيل الكاملة هنا..." required></textarea></div>
+                        <div class="form-group full"><button type="submit" class="btn-primary" id="btn-save-news"><i class="fa-solid fa-bullhorn"></i> نشر الخبر</button></div>
+                    </form>
+                </div>
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-list"></i> أرشيف الأخبار المنشورة</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table">
+                            <thead><tr><th>صورة</th><th>العنوان</th><th>التاريخ</th><th>التفاصيل</th><th>حذف</th></tr></thead>
+                            <tbody id="tb-news"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-ratings" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-star-half-stroke"></i> الرصد المباشر لتقييمات الزبائن</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table"><thead><tr><th>الزبون</th><th>النجوم</th><th>الهاتف</th><th>الفرع</th><th>الرأي</th><th>مسح</th></tr></thead><tbody id="tb-ratings"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-complaints" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-shield-halved"></i> الشكاوى المعلقة (منصة الزبائن)</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table"><thead><tr><th>المشتكي</th><th>الهاتف</th><th>الفرع</th><th>نص الشكوى (Message)</th><th>وقت الورود</th><th>إنهاء/مسح</th></tr></thead><tbody id="tb-complaints"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-contact" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-link"></i> ربط منصات التواصل والروابط</h3>
+                    <form id="frm-contact" class="form-grid">
+                        <div class="form-group">
+                            <label>المفتاح البرمجي للمنصة (Type)</label>
+                            <select id="con-type" class="form-control">
+                                <option value="phone">هاتف مباشر (Phone)</option>
+                                <option value="email">بريد الكتروني (Email)</option>
+                                <option value="whatsapp">واتساب (Whatsapp)</option>
+                                <option value="instagram">انستغرام (Instagram)</option>
+                                <option value="facebook">فيسبوك (Facebook)</option>
+                                <option value="snapchat">سناب شات (Snapchat)</option>
+                                <option value="tiktok">تيك توك (Tiktok)</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>القيمة (Value)</label><input type="text" id="con-value" class="form-control" placeholder="أدخل الرقم، الإيميل، أو اليوزر..." required></div>
+                        <div class="form-group full"><button type="submit" class="btn-primary"><i class="fa-solid fa-satellite-dish"></i> مزامنة الرابط مع الواجهة الأمامية</button></div>
+                    </form>
+                </div>
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-server"></i> الروابط النشطة بالموقع</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table"><thead><tr><th>نوع المنصة (Key)</th><th>البيانات الموجهة (Value)</th><th>إزالة</th></tr></thead><tbody id="tb-contacts"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-branches" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-location-dot"></i> تسجيل فرع جديد</h3>
+                    <form id="frm-branch" class="form-grid">
+                        <div class="form-group"><label>اسم المنطقة / الفرع</label><input type="text" id="br-name" class="form-control" required></div>
+                        <div class="form-group"><label>رابط إحداثيات جوجل ماب</label><input type="url" id="br-loc" class="form-control" required></div>
+                        <div class="form-group full"><label>تفاصيل ومواعيد العمل</label><textarea id="br-desc" class="form-control"></textarea></div>
+                        <div class="form-group full"><button type="submit" class="btn-primary"><i class="fa-solid fa-building-circle-check"></i> تدشين الفرع بالسيرفر</button></div>
+                    </form>
+                </div>
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-map-location-dot"></i> الفروع المعتمدة</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table"><thead><tr><th>اسم الفرع</th><th>الموقع الجغرافي</th><th>التفاصيل</th><th>حذف</th></tr></thead><tbody id="tb-branches"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-jobs" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-user-tie"></i> بنك الكفاءات والطلبات الواردة</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table"><thead><tr><th>الاسم</th><th>المنصب</th><th>الهاتف</th><th>الخبرة</th><th>نبذة شخصية</th><th>السيرة (CV)</th><th>مسح</th></tr></thead><tbody id="tb-jobs"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-bingo" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-ticket"></i> محرك توليد وتشفير الكوبونات</h3>
+                    <form id="frm-bingo" class="form-grid">
+                        <div class="form-group full">
+                            <label>كود الخصم (Cipher)</label>
+                            <div style="display:flex;">
+                                <input type="text" id="bg-code" class="form-control" style="flex:1; border-radius:0 14px 14px 0; border-left:none;" required>
+                                <button type="button" class="btn-primary" style="border-radius:14px 0 0 14px; padding:0 35px; margin:0; box-shadow:none;" onclick="app.generateSmartCode()"><i class="fa-solid fa-wand-magic-sparkles"></i> توليد عشوائي</button>
+                            </div>
+                        </div>
+                        <div class="form-group"><label>الجائزة / الخصم الممنوح</label><input type="text" id="bg-prize" class="form-control" placeholder="مثال: خصم 50% أو قهوة مجانية" required></div>
+                        <div class="form-group"><label>تاريخ الانتهاء</label><input type="date" id="bg-date" class="form-control" required></div>
+                        <div class="form-group full"><label>عدد الكروت المسموحة (الحد الأقصى)</label><input type="number" id="bg-count" class="form-control" value="100" required></div>
+                        <div class="form-group full"><button type="submit" class="btn-primary"><i class="fa-solid fa-tags"></i> طرح الكود في النظام</button></div>
+                    </form>
+                </div>
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-boxes-packing"></i> الكوبونات الفعالة حالياً</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table"><thead><tr><th>الكود السري</th><th>الجائزة</th><th>الصلاحية</th><th>الكمية</th><th>حذف</th></tr></thead><tbody id="tb-bingo"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-emails" class="tab-layer">
+                <div class="sys-panel">
+                    <h3><i class="fa-solid fa-envelope-open-text"></i> قاعدة بيانات المشتركين (Newsletter)</h3>
+                    <div class="table-wrapper">
+                        <table class="sys-table"><thead><tr><th>البريد الإلكتروني (Email)</th><th>مصدر التسجيل</th><th>وقت التوثيق (Time)</th><th>مسح</th></tr></thead><tbody id="tb-emails"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="chatModal">
+        <div class="chat-modal-content">
+            <div class="chat-modal-header">
+                <span><i class="fa-solid fa-eye"></i> الرقابة والتدخل المباشر (Live)</span>
+                <button style="background:none; border:none; color:var(--sys-danger); font-size:24px; cursor:pointer;" onclick="document.getElementById('chatModal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="chat-modal-body" id="chatModalBody"></div>
+            
+            <div id="chatModalFooter" style="display:none; padding:15px 25px; border-top:2px solid var(--sys-border); background:var(--sys-bg); gap:15px; align-items: center;">
+                <input type="text" id="adminReplyInput" class="form-control" style="flex:1;" placeholder="اكتب ردك المباشر للزبون (موظف دعم)..." onkeypress="if(event.key==='Enter') app.sendAdminReply()">
+                <button class="btn-primary" style="padding:15px 30px;" onclick="app.sendAdminReply()"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        // 🚨 تمت إضافة updateDoc للتحكم في الدردشة 🚨
+        import { getFirestore, collection, collectionGroup, onSnapshot, addDoc, deleteDoc, doc, getDoc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        
+        // Configuration
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBQLp5FeHaP3vcJfuY22DtGu48j0fyveb0", 
+            authDomain: "qahwtna-b65ca.firebaseapp.com", 
+            projectId: "qahwtna-b65ca",
+            storageBucket: "qahwtna-b65ca.appspot.com"
+        };
+        
+        const fApp = initializeApp(firebaseConfig);
+        const db = getFirestore(fApp);
+        const auth = getAuth(fApp);
+        const storage = getStorage(fApp);
+
+        // Core App Object
+        window.app = {
+            collections: ['menu', 'ratings', 'complaint', 'contacts', 'branches', 'job_applications', 'bingo', 'newsletter', 'movements', 'banned_users', 'news'],
+            chatCache: [], 
+            currentChatId: null, // تتبع المحادثة المفتوحة حالياً للرد عليها
+            
+            showToast: function(msg, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                let icon = 'fa-check-double'; let cType = '';
+                if(type === 'error') { icon = 'fa-circle-exclamation'; cType = 'error'; }
+                if(type === 'info') { icon = 'fa-circle-info'; cType = 'info'; }
+                
+                toast.className = `sys-toast ${cType}`;
+                toast.innerHTML = `<i class="fa-solid ${icon}" style="color:var(--sys-${type === 'error' ? 'danger' : type === 'info' ? 'gold' : 'success'})"></i> <span>${msg}</span>`;
+                container.appendChild(toast);
+                setTimeout(() => { toast.style.animation = 'fadeOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards'; setTimeout(() => toast.remove(), 400); }, 4500);
+            },
+
+            logMovement: async function(actionName, details) {
+                try {
+                    await addDoc(collection(db, "movements"), { type: actionName, details: details, time: Date.now() });
+                } catch(e) { console.error("فشل تسجيل الحركة:", e); }
+            },
+
+            initGuard: function() {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        try {
+                            document.getElementById('security-shield').style.display = 'none';
+                            const name = user.displayName || user.email.split('@')[0];
+                            document.getElementById('display-name').innerText = name;
+                            document.getElementById('greeting-txt').innerText = `أهلاً يا ${name}،`;
+                            if(user.photoURL) document.getElementById('u-avatar').src = user.photoURL;
+                            this.initSync();
+                            this.logMovement("تسجيل دخول", `تم دخول المسؤول (${name}) إلى النظام بنجاح.`);
+                            this.showToast("تم التحقق من الهوية. النظام جاهز.", 'info');
+                        } catch(e) { this.triggerKick("بروتوكول الأمان: خطأ في جلب البيانات."); }
+                    } else { this.triggerKick("غير مصرح. يرجى تسجيل الدخول."); }
+                });
+            },
+
+            triggerKick: function(msg) {
+                const s = document.getElementById('security-shield');
+                document.getElementById('shield-msg').innerText = msg;
+                s.style.display = 'flex';
+                setTimeout(() => window.location.replace("login.html"), 2000);
+            },
+
+            logout: function() { 
+                if(confirm("تنبيه: هل تريد إغلاق الجلسة الأمنية؟")) {
+                    this.logMovement("تسجيل خروج", "تم تسجيل الخروج من النظام.");
+                    signOut(auth);
+                }
+            },
+
+            switchTab: function(id) {
+                document.querySelectorAll('.tab-layer').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                event.currentTarget.classList.add('active');
+            },
+
+            generateSmartCode: function() {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let code = 'QAHWA-';
+                for(let i=0; i<6; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+                document.getElementById('bg-code').value = code;
+                this.showToast("تم توليد تشفير عشوائي بنجاح.", 'info');
+            },
+
+            toggleImgInput: function(type, urlId, fileId) {
+                const urlInput = document.getElementById(urlId); const fileInput = document.getElementById(fileId);
+                if(type === 'url') { urlInput.style.display = 'block'; urlInput.setAttribute('required', 'true'); fileInput.style.display = 'none'; fileInput.removeAttribute('required'); } 
+                else { urlInput.style.display = 'none'; urlInput.removeAttribute('required'); fileInput.style.display = 'block'; fileInput.setAttribute('required', 'true'); }
+            },
+
+            deleteRecord: async function(col, id) {
+                if(confirm("تنبيه سيادي: الحذف نهائي. هل أنت متأكد؟")) {
+                    try { 
+                        await deleteDoc(doc(db, col, id)); 
+                        this.showToast(col === 'banned_users' ? "تم فك الحظر عن المستخدم بنجاح." : "تم مسح السجل من قاعدة البيانات السحابية."); 
+                        this.logMovement("عملية حذف", `تم حذف سجل من قسم (${col}) برمز تعريفي: ${id.substring(0,5)}...`);
+                    } 
+                    catch(e) { this.showToast("تم رفض الصلاحية أو خطأ: " + e.message, 'error'); }
+                }
+            },
+
+            // 🚨 نظام عرض الدردشة والتدخل البشري 🚨
+            viewChat: function(refId) {
+                this.currentChatId = refId;
+                this.renderChatModal();
+            },
+
+            renderChatModal: function() {
+                if(!this.currentChatId) return;
+                const c = this.chatCache.find(x => x.refId === this.currentChatId);
+                const b = document.getElementById('chatModalBody'); b.innerHTML = '';
+                const f = document.getElementById('chatModalFooter');
+                
+                if(c && c.messages) {
+                    let needsHuman = false;
+                    
+                    c.messages.forEach(m => {
+                        // كشف طلب التدخل البشري أو وجود تدخل مسبق من الإدارة
+                        if (m.content === 'TRANSFER_TO_HUMAN_SUPPORT' || m.role === 'admin') needsHuman = true;
+                        if (m.content === 'TRANSFER_TO_HUMAN_SUPPORT') return; // إخفاء الكود البرمجي عن العرض
+
+                        const d = document.createElement('div');
+                        let senderStr = m.role === 'user' ? 'الزبون' : (m.role === 'admin' ? 'خدمة العملاء (موظف)' : 'فستق (AI)');
+                        let timeStr = m.time ? new Date(m.time).toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}) : 'الآن';
+                        
+                        d.className = `msg-bubble ${m.role === 'user' ? 'msg-user' : 'msg-bot'}`;
+                        if(m.role === 'admin') d.style.border = '2px solid var(--sys-danger)'; // تمييز رسائل الموظف بلون أحمر
+                        
+                        d.innerHTML = `<div style="font-size:11px; margin-bottom:6px; opacity:0.8; font-weight:800; font-family:'Orbitron';">👤 ${senderStr} • ⏰ ${timeStr}</div><div>${m.content}</div>`;
+                        b.appendChild(d);
+                    });
+                    
+                    if(needsHuman) {
+                        f.style.display = 'flex'; // فتح مربع الرد للموظف
+                    } else {
+                        f.style.display = 'none'; // إغلاق المربع
+                        const note = document.createElement('div');
+                        note.style.textAlign = 'center'; note.style.color = 'var(--sys-text-dim)'; note.style.fontSize = '12px'; note.style.fontWeight = '700'; note.style.marginTop = '15px';
+                        note.innerHTML = '<i class="fa-solid fa-lock"></i> الدردشة تدار بواسطة فستق حالياً. التدخل البشري مغلق إلا إذا استدعى الذكاء الاصطناعي دعماً.';
+                        b.appendChild(note);
+                    }
+                    
+                    document.getElementById('chatModal').style.display = 'flex';
+                    b.scrollTop = b.scrollHeight; // النزول لآخر رسالة
+                } else {
+                    this.showToast("لا يوجد محتوى لهذه المحادثة.", 'error');
+                }
+            },
+
+            // إرسال رد الإدارة المباشر للزبون
+            sendAdminReply: async function() {
+                const inp = document.getElementById('adminReplyInput');
+                const val = inp.value.trim();
+                if(!val || !this.currentChatId) return;
+                
+                const c = this.chatCache.find(x => x.refId === this.currentChatId);
+                if(c) {
+                    inp.value = ''; // تفريغ الحقل
+                    const newMsg = { role: 'admin', content: val, time: Date.now() };
+                    const updated = [...c.messages, newMsg];
+                    
+                    try {
+                        await updateDoc(doc(db, 'chats', c.docId), { messages: updated });
+                        this.logMovement("دعم بشري (Live Chat)", `تم إرسال رسالة دعم مباشرة للزبون في محادثة: ${this.currentChatId}.`);
+                    } catch(e) {
+                        this.showToast("خطأ أمني بالإرسال: " + e.message, 'error');
+                    }
+                }
+            },
+
+            initSync: function() {
+                // العدادات 
+                this.collections.forEach(col => {
+                    if(col === 'movements') return; 
+                    const elID = col === 'complaint' ? 'st-complaints' : col === 'newsletter' ? 'st-emails' : col === 'banned_users' ? 'st-bans' : `st-${col}`;
+                    const el = document.getElementById(elID);
+                    if(el) onSnapshot(collection(db, col), snap => { el.innerText = snap.size; });
+                });
+
+                // --- محادثات الذكاء الاصطناعي ---
+                onSnapshot(query(collection(db, 'chats'), orderBy('timestamp', 'desc')), snap => {
+                    const el = document.getElementById('st-chats'); if(el) el.innerText = snap.size;
+                    let h = ''; this.chatCache = [];
+                    snap.forEach(d => {
+                        const x = d.data(); 
+                        x.docId = d.id; // حفظ رقم الوثيقة السري للتعديل
+                        this.chatCache.push(x);
+                        
+                        const dDate = x.timestamp ? new Date(x.timestamp.toMillis()).toLocaleString('ar-EG') : '-';
+                        
+                        // تنبيه لوني إذا كانت المحادثة تحتاج تدخل بشري
+                        let needsAttention = x.messages && x.messages.some(m => m.content === 'TRANSFER_TO_HUMAN_SUPPORT');
+                        let badgeStyle = needsAttention ? 'background:var(--sys-danger); color:#fff; animation:pulse 2s infinite;' : '';
+                        
+                        h += `<tr>
+                            <td><span class="badge b-dark" style="${badgeStyle}">${x.refId || '-'} ${needsAttention ? '🚨' : ''}</span></td>
+                            <td style="font-family:'Orbitron'; font-weight:800; direction:ltr; text-align:right;">${x.userEmail || 'مجهول'}</td>
+                            <td style="font-family:'Orbitron'; direction:ltr; font-size:13px; color:var(--sys-text-dim);">${dDate}</td>
+                            <td><button class="act-btn act-view" onclick="app.viewChat('${x.refId}')"><i class="fa-solid fa-eye"></i> </button></td>
+                        </tr>`;
+                    });
+                    document.getElementById('tb-chats').innerHTML = h;
+                    
+                    // تحديث المودال فوراً إذا كان مفتوحاً ليعرض الرسائل الحية
+                    if(document.getElementById('chatModal').style.display === 'flex') {
+                        this.renderChatModal();
+                    }
+                });
+
+                // --- المحظورين ---
+                onSnapshot(collection(db, "banned_users"), snap => {
+                    let h = ''; snap.forEach(d => {
+                        const x = d.data();
+                        const dDate = x.timestamp ? new Date(x.timestamp).toLocaleString('ar-EG') : '-';
+                        h += `<tr>
+                            <td style="font-family:'Orbitron'; direction:ltr; text-align:right; font-weight:800; color:var(--sys-primary);">${x.email}</td>
+                            <td><span class="badge b-hot">${x.word_used || 'مجهول'}</span></td>
+                            <td style="font-size:13px; font-family:'Orbitron'; direction:ltr; color:var(--sys-text-dim);">${dDate}</td>
+                            <td><button class="act-btn act-view" style="color:var(--sys-success); background:rgba(16,185,129,0.1);" onclick="app.deleteRecord('banned_users','${d.id}')" title="فك الحظر عن هذا المستخدم"><i class="fa-solid fa-unlock"></i> </button></td>
+                        </tr>`;
+                    });
+                    document.getElementById('tb-bans').innerHTML = h;
+                });
+
+                // --- سجل الحركات ---
+                onSnapshot(query(collection(db, "movements"), orderBy("time", "desc")), snap => {
+                    let h = ''; snap.forEach(d => {
+                        const x = d.data();
+                        const dDate = x.time ? new Date(x.time).toLocaleString('ar-EG') : '-';
+                        let typeBadge = 'b-sweet';
+                        if(x.type.includes('حذف') || x.type.includes('أمني')) typeBadge = 'b-hot';
+                        if(x.type.includes('إضافة') || x.type.includes('تدشين') || x.type.includes('تحديث') || x.type.includes('نشر')) typeBadge = 'b-cold';
+                        if(x.type.includes('دخول') || x.type.includes('خروج')) typeBadge = 'b-dark';
+
+                        h += `<tr><td><span class="badge ${typeBadge}">${x.type}</span></td><td style="font-weight:700; color:var(--sys-text); max-width:400px; white-space:normal;">${x.details}</td><td style="direction:ltr; font-family:'Orbitron'; font-size:13px; color:var(--sys-text-dim);">${dDate}</td></tr>`;
+                    });
+                    document.getElementById('tb-movements').innerHTML = h;
+                });
+
+                // --- المنيو ---
+                onSnapshot(query(collection(db, "menu"), orderBy("time", "desc")), snap => {
+                    let h = ''; snap.forEach(d => { 
+                        const x = d.data(); 
+                        const badgeClass = x.type === 'ساخن' ? 'b-hot' : x.type === 'بارد' ? 'b-cold' : 'b-sweet';
+                        h += `<tr><td><img src="${x.image}" width="50" height="50" style="border-radius:14px;object-fit:cover; border:2px solid var(--sys-border);"></td><td style="font-weight:900; color:var(--sys-primary); font-size:16px;">${x.name}</td><td style="color:var(--sys-gold); font-weight:900; font-family:'Orbitron'; font-size:17px;">${x.price} JD</td><td><span class="badge ${badgeClass}">${x.type}</span></td><td style="color:var(--sys-text-dim); max-width:280px; white-space:normal; line-height:1.6;">${x.desc}</td><td><button class="act-btn act-del" onclick="app.deleteRecord('menu','${d.id}')"><i class="fa-solid fa-trash-can"></i></button></td></tr>`; 
+                    });
+                    document.getElementById('tb-menu').innerHTML = h;
+                });
+
+                // --- الأخبار (المركز الإعلامي) ---
+                onSnapshot(query(collection(db, "news"), orderBy("time", "desc")), snap => {
+                    let h = ''; snap.forEach(d => { 
+                        const x = d.data(); 
+                        h += `<tr>
+                            <td><img src="${x.image}" width="50" height="50" style="border-radius:14px;object-fit:cover; border:2px solid var(--sys-border);"></td>
+                            <td style="font-weight:900; color:var(--sys-primary); font-size:15px;">${x.title}</td>
+                            <td style="font-family:'Orbitron'; direction:ltr; font-weight:700; color:var(--sys-gold);">${x.date}</td>
+                            <td style="color:var(--sys-text-dim); max-width:300px; white-space:normal; line-height:1.6;">${x.desc}</td>
+                            <td><button class="act-btn act-del" onclick="app.deleteRecord('news','${d.id}')"><i class="fa-solid fa-trash-can"></i></button></td>
+                        </tr>`; 
+                    });
+                    document.getElementById('tb-news').innerHTML = h;
+                });
+
+                // --- Ratings ---
+                onSnapshot(query(collection(db, "ratings"), orderBy("time", "desc")), snap => {
+                    let h = ''; snap.forEach(d => { const x = d.data(); h += `<tr><td style="font-weight:800;">${x.name}</td><td style="color:var(--sys-gold); font-size:18px; letter-spacing:3px;">${'★'.repeat(x.rating||5)}</td><td style="font-family:'Orbitron'; direction:ltr;">${x.phone}</td><td style="font-weight:700;">${x.branch}</td><td style="white-space:normal; max-width:320px; line-height:1.6;">${x.details}</td><td><button class="act-btn act-del" onclick="app.deleteRecord('ratings','${d.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+                    document.getElementById('tb-ratings').innerHTML = h;
+                });
+
+                // --- Complaints ---
+                onSnapshot(query(collection(db, "complaint"), orderBy("time", "desc")), snap => {
+                    let h = ''; snap.forEach(d => { 
+                        const x = d.data(); 
+                        const dateString = x.time ? new Date(x.time).toLocaleString('ar-EG') : 'غير متوفر';
+                        h += `<tr><td style="font-weight:900; color:var(--sys-danger);">${x.name}</td><td style="font-family:'Orbitron'; direction:ltr;">${x.phone}</td><td style="font-weight:800;">${x.branch}</td><td style="white-space:normal; max-width:350px; line-height:1.6; font-weight:700;">${x.message || '-'}</td><td style="font-size:12px; color:var(--sys-text-dim); direction:ltr; font-family:'Orbitron';">${dateString}</td><td><button class="act-btn act-del" onclick="app.deleteRecord('complaint','${d.id}')"><i class="fa-solid fa-trash-can"></i></button></td></tr>`; 
+                    });
+                    document.getElementById('tb-complaints').innerHTML = h;
+                });
+
+                // --- Contacts ---
+                onSnapshot(collection(db, "contacts"), snap => {
+                    let h = ''; snap.forEach(d => { 
+                        const x = d.data(); 
+                        const isSocial = !['phone','email','whatsapp'].includes(x.type);
+                        h += `<tr><td><span class="badge ${isSocial ? 'b-sweet' : 'b-dark'}" style="text-transform:uppercase;">${x.type}</span></td><td style="font-family:'Orbitron'; direction:ltr; text-align:right; font-weight:800; font-size:16px;">${x.value}</td><td><button class="act-btn act-del" onclick="app.deleteRecord('contacts','${d.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; 
+                    });
+                    document.getElementById('tb-contacts').innerHTML = h;
+                });
+
+                // --- Branches ---
+                onSnapshot(collection(db, "branches"), snap => {
+                    let h = ''; snap.forEach(d => { const x = d.data(); h += `<tr><td style="font-weight:900; font-size:16px;">${x.name}</td><td><a href="${x.link}" target="_blank" class="act-view"><i class="fa-solid fa-map-location-dot"></i> استكشاف الموقع</a></td><td style="white-space:normal; max-width:300px; line-height:1.6;">${x.desc}</td><td><button class="act-btn act-del" onclick="app.deleteRecord('branches','${d.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+                    document.getElementById('tb-branches').innerHTML = h;
+                });
+
+                // --- Jobs ---
+                onSnapshot(query(collection(db, "job_applications"), orderBy("time", "desc")), snap => {
+                    let h = ''; snap.forEach(d => { const x = d.data(); h += `<tr><td style="font-weight:800;">${x.name}</td><td style="color:var(--sys-primary); font-weight:900;">${x.position}</td><td style="font-family:'Orbitron'; direction:ltr;">${x.phone}</td><td style="font-weight:800;">${x.experience}</td><td style="white-space:normal; max-width:220px; font-size:13px; color:var(--sys-text-dim);">${x.bio || '-'}</td><td><a href="${x.cv_link}" target="_blank" class="act-view"><i class="fa-solid fa-file-pdf"></i> تحميل CV</a></td><td><button class="act-btn act-del" onclick="app.deleteRecord('job_applications','${d.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+                    document.getElementById('tb-jobs').innerHTML = h;
+                });
+
+                // --- Bingo ---
+                onSnapshot(collection(db, "bingo"), snap => {
+                    let h = ''; snap.forEach(d => { const x = d.data(); h += `<tr><td><span class="badge b-hot" style="font-size:15px; letter-spacing:1px;">${x.code}</span></td><td style="font-weight:900; font-size:16px;">${x.prize}</td><td style="font-family:'Orbitron'; font-weight:700;">${x.valid_until}</td><td style="font-weight:900; color:var(--sys-gold);">${x.cards} بطاقة</td><td><button class="act-btn act-del" onclick="app.deleteRecord('bingo','${d.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+                    document.getElementById('tb-bingo').innerHTML = h;
+                });
+
+                // --- Newsletter ---
+                onSnapshot(query(collection(db, "newsletter")), snap => {
+                    let docs = []; snap.forEach(d => docs.push({id: d.id, ...d.data()}));
+                    docs.sort((a,b) => {
+                        let ta = a.registeredAt?.toMillis ? a.registeredAt.toMillis() : (a.timestamp || 0);
+                        let tb = b.registeredAt?.toMillis ? b.registeredAt.toMillis() : (b.timestamp || 0);
+                        return tb - ta;
+                    });
+
+                    let h = ''; docs.forEach(x => { 
+                        let dateString = 'الآن';
+                        if (x.registeredAt && x.registeredAt.toDate) { dateString = x.registeredAt.toDate().toLocaleString('ar-EG'); } 
+                        else if (x.timestamp) { dateString = new Date(x.timestamp).toLocaleString('ar-EG'); }
+
+                        h += `<tr>
+                            <td style="font-family:'Orbitron'; direction:ltr; text-align:right; font-weight:800; font-size:16px; color:var(--sys-primary);">${x.email}</td>
+                            <td><span class="badge b-cold">${x.page || 'مجهول'}</span></td>
+                            <td style="font-size:13px; color:var(--sys-text-dim); direction:ltr; font-family:'Orbitron';">${dateString}</td>
+                            <td><button class="act-btn act-del" onclick="app.deleteRecord('newsletter','${x.id}')"><i class="fa-solid fa-trash-can"></i></button></td>
+                        </tr>`; 
+                    });
+                    document.getElementById('tb-emails').innerHTML = h;
+                });
+
+                // Chart Animation 
+                const ctx = document.getElementById('sysChart').getContext('2d');
+                new Chart(ctx, { type: 'line', data: { labels: ['1','2','3','4','5','6','7'], datasets: [{ data: [40, 60, 45, 80, 50, 90, 85], borderColor: '#d4af37', backgroundColor: 'rgba(212, 175, 55, 0.1)', fill: true, tension: 0.4, borderWidth: 3 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: {display:false}, y: {display:false} } } });
+            }
+        };
+
+        // --- Data Insertion Forms ---
+        
+        // 1. Menu 
+        document.getElementById('frm-menu').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const btn = document.getElementById('btn-save-menu'); 
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التشفير والرفع...';
+            try {
+                const imgType = document.querySelector('input[name="imgType"]:checked').value; let imageUrl = '';
+                if(imgType === 'url') { imageUrl = document.getElementById('menu-img-url').value; } 
+                else {
+                    const file = document.getElementById('menu-img-file').files[0];
+                    const snapshot = await uploadBytesResumable(ref(storage, 'menu_vault/' + Date.now() + '_' + file.name), file);
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                }
+                const itemName = document.getElementById('menu-name').value;
+                const itemType = document.getElementById('menu-type').value; 
+                
+                await addDoc(collection(db, "menu"), { name: itemName, price: document.getElementById('menu-price').value, type: itemType, desc: document.getElementById('menu-desc').value, image: imageUrl, time: Date.now() });
+                
+                app.logMovement("إضافة للمنيو", `تم إضافة صنف جديد (${itemName}) ضمن قسم (${itemType}).`);
+                e.target.reset(); app.toggleImgInput('url', 'menu-img-url', 'menu-img-file'); app.showToast("تم تحديث المنيو السحابي بنجاح.");
+            } catch(err) { app.showToast("خطأ أمني: " + err.message, 'error'); } finally { btn.disabled = false; btn.innerHTML = "<i class='fa-solid fa-cloud-arrow-up'></i> تشفير وحفظ الصنف"; }
+        });
+
+        // 2. News (المركز الإعلامي)
+        document.getElementById('frm-news').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const btn = document.getElementById('btn-save-news'); 
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع والنشر...';
+            try {
+                const imgType = document.querySelector('input[name="newsImgType"]:checked').value; let imageUrl = '';
+                if(imgType === 'url') { imageUrl = document.getElementById('news-img-url').value; } 
+                else {
+                    const file = document.getElementById('news-img-file').files[0];
+                    const snapshot = await uploadBytesResumable(ref(storage, 'news_vault/' + Date.now() + '_' + file.name), file);
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                }
+                const nTitle = document.getElementById('news-title').value;
+                
+                await addDoc(collection(db, "news"), { title: nTitle, date: document.getElementById('news-date').value, desc: document.getElementById('news-desc').value, image: imageUrl, time: Date.now() });
+                
+                app.logMovement("نشر خبر", `تم نشر خبر جديد في المنصة بعنوان (${nTitle}).`);
+                e.target.reset(); app.toggleImgInput('url', 'news-img-url', 'news-img-file'); app.showToast("تم نشر الخبر الإعلامي بنجاح.");
+            } catch(err) { app.showToast("خطأ أمني: " + err.message, 'error'); } finally { btn.disabled = false; btn.innerHTML = "<i class='fa-solid fa-bullhorn'></i> نشر الخبر"; }
+        });
+
+        // 3. Contacts
+        document.getElementById('frm-contact').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = e.target.querySelector('button'); btn.disabled = true;
+            try {
+                const type = document.getElementById('con-type').value;
+                const val = document.getElementById('con-value').value;
+                await addDoc(collection(db, "contacts"), { type: type, value: val });
+                app.logMovement("تحديث الروابط", `تم إضافة رابط أو منصة جديدة من نوع (${type}).`);
+                e.target.reset(); app.showToast("تم مزامنة الرابط مع الموقع الأمامي.");
+            } catch(err) { app.showToast("رفض الاتصال.", 'error'); } finally { btn.disabled = false; }
+        });
+
+        // 4. Branches
+        document.getElementById('frm-branch').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = e.target.querySelector('button'); btn.disabled = true;
+            try {
+                const bName = document.getElementById('br-name').value;
+                await addDoc(collection(db, "branches"), { name: bName, link: document.getElementById('br-loc').value, desc: document.getElementById('br-desc').value });
+                app.logMovement("تدشين فرع", `تم إضافة فرع جديد للنظام باسم (${bName}).`);
+                e.target.reset(); app.showToast("تم تدشين الفرع بنجاح.");
+            } catch(err) { app.showToast("فشل الحفظ.", 'error'); } finally { btn.disabled = false; }
+        });
+
+        // 5. Bingo
+        document.getElementById('frm-bingo').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = e.target.querySelector('button'); btn.disabled = true;
+            try {
+                const code = document.getElementById('bg-code').value;
+                await addDoc(collection(db, "bingo"), { code: code, prize: document.getElementById('bg-prize').value, valid_until: document.getElementById('bg-date').value, cards: parseInt(document.getElementById('bg-count').value), time: Date.now() });
+                app.logMovement("توليد كوبون", `تم إنشاء كود بينجو جديد (${code}).`);
+                e.target.reset(); app.showToast("تم تفعيل كود البينجو ونشره.");
+            } catch(err) { app.showToast("خطأ في السيرفر.", 'error'); } finally { btn.disabled = false; }
+        });
+
+        // App Boot Sequence
+        window.addEventListener('DOMContentLoaded', () => { app.initGuard(); });
+
+    </script>
+</body>
+</html>

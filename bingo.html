@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام البينجو والمكافآت | إمبراطورية قهوتنا وبس</title>
+    <meta name="description" content="أدخل كود الفاتورة واكتشف هديتك! نظام مكافآت قهوتنا وبس الحصري لزبائننا المميزين.">
+    <link rel="icon" type="image/x-icon" href="https://www.appcreator24.com/srv/imgs/gen/3947485_ico.png?ts=1773849297">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Tajawal:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. CORE VARIABLES & THEME
+           ========================================================================== */
+        :root {
+            --q-primary: #1B4332; --q-primary-light: #2D6A4F; --q-primary-dark: #081C15;
+            --q-accent: #40916C; --q-gold: hwb(120 66% 8%); --q-white: #ffffff;
+            --q-off-white: #f8fbf9; --q-dark: #111827; --q-gray: #6b7280;
+            --q-danger: #e63946; --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2); --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-main: 'IBM Plex Sans Arabic', sans-serif; --font-heading: 'Tajawal', sans-serif;
+            --trans-fast: 0.2s ease; --trans-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --z-nav: 1000; --z-dropdown: 1010; --z-toast: 9999;
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET
+           ========================================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--q-off-white); }
+        ::-webkit-scrollbar-thumb { background: var(--q-gold); border-radius: 5px; } 
+        ::-webkit-scrollbar-thumb:hover { background: #b0895c; }
+
+        body { font-family: var(--font-main); background-color: var(--q-off-white); color: var(--q-dark); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 900; }
+        a { text-decoration: none; color: inherit; transition: var(--trans-fast); }
+        ul { list-style: none; }
+        button { font-family: var(--font-main); cursor: pointer; border: none; background: none; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
+
+        /* ==========================================================================
+           3. FAST PRELOADER
+           ========================================================================== */
+        #preloader { position: fixed; inset: 0; background: var(--q-primary-dark); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.3s ease; }
+        .spinner-fast { width: 60px; height: 60px; border: 4px solid rgba(212,163,115,0.2); border-top-color: var(--q-gold); border-radius: 50%; animation: spinFast 0.8s linear infinite; }
+        @keyframes spinFast { to { transform: rotate(360deg); } }
+        .loader-text { margin-top: 20px; color: var(--q-gold); font-family: var(--font-heading); font-size: 18px; letter-spacing: 1px; }
+
+        /* ==========================================================================
+           4. MEGA HEADER
+           ========================================================================== */
+        .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: var(--z-nav); background: transparent; padding: 25px 0; border-bottom: 1px solid transparent; transition: var(--trans-smooth); }
+        .main-header.scrolled { padding: 10px 0; background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: var(--glass-shadow); border-bottom-color: var(--glass-border); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo-box { font-family: var(--font-heading); font-size: 28px; color: var(--q-white); border: 3px solid var(--q-white); padding: 5px 20px; transition: var(--trans-fast); letter-spacing: 1px; }
+        .main-header.scrolled .logo-box { color: var(--q-primary); border-color: var(--q-primary); }
+        .logo-box:hover { background: var(--q-primary); color: var(--q-white) !important; transform: scale(1.05); }
+
+        .nav-menu { display: flex; align-items: center; gap: 35px; }
+        .nav-item { position: relative; font-weight: 700; color: var(--q-white); font-size: 16px; padding: 10px 0; transition: var(--trans-fast); cursor: pointer; }
+        .main-header.scrolled .nav-item { color: var(--q-dark); }
+        .nav-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background: var(--q-gold); transition: var(--trans-fast); border-radius: 5px; }
+        .nav-item:hover::after, .nav-item.active::after { width: 100%; }
+        .nav-item:hover { color: var(--q-gold); }
+        .main-header.scrolled .nav-item:hover, .main-header.scrolled .nav-item.active { color: var(--q-primary); }
+
+        .nav-item.bingo-link { color: var(--q-gold) !important; text-shadow: 0 0 10px rgba(212,163,115,0.3); }
+
+        .has-dropdown { display: flex; align-items: center; gap: 8px; }
+        .has-dropdown i { font-size: 10px; transition: 0.3s; }
+        .has-dropdown:hover i { transform: rotate(180deg); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; min-width: 240px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); opacity: 0; visibility: hidden; transform: translateY(15px); transition: var(--trans-smooth); padding: 10px 0; z-index: var(--z-dropdown); display: flex; flex-direction: column; }
+        .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-link { display: flex; align-items: center; gap: 10px; padding: 12px 20px; color: var(--q-dark) !important; font-size: 15px !important; transition: var(--trans-fast); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .dropdown-link:last-child { border-bottom: none; }
+        .dropdown-link:hover { background: rgba(64,145,108,0.08); color: var(--q-primary) !important; padding-right: 30px; }
+
+        .btn-auth { background: var(--q-primary); color: var(--q-white) !important; padding: 12px 28px; border-radius: 8px; font-weight: 800; font-size: 15px; transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(27, 67, 50, 0.3); }
+        .btn-auth:hover { background: var(--q-accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(64,145,108,0.5); }
+
+        /* ==========================================================================
+           10. MOBILE MENU (HAMBURGER)
+           ========================================================================== */
+        .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--q-white); font-size: 28px; cursor: pointer; transition: 0.3s; }
+        .main-header.scrolled .mobile-menu-btn { color: var(--q-primary-dark); }
+
+        .mobile-nav-overlay { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; background: #040d0a; z-index: 10000; padding: 60px 20px; box-shadow: 5px 0 30px rgba(0,0,0,0.8); transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-right: 2px solid var(--q-gold); }
+        .mobile-nav-overlay.active { left: 0; }
+
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; border: none; color: var(--q-white); font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .close-menu-btn:hover { background: var(--q-danger); transform: rotate(90deg); }
+
+        .mobile-logo { color: var(--q-white); font-family: var(--font-heading); font-size: 24px; margin-bottom: 30px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+
+        .mobile-menu-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
+        .mobile-menu-list a { color: #ffffff; font-size: 17px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; transition: 0.3s; background: rgba(255,255,255,0.03); }
+        .mobile-menu-list a i { color: var(--q-gold); width: 20px; text-align: center; }
+        .mobile-menu-list a:hover { background: var(--q-primary); padding-left: 25px; color: var(--q-gold); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none !important; } 
+            .nav-container { position: relative; }
+            .mobile-menu-btn { display: block; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+        }
+
+        /* ==========================================================================
+           5. BINGO HERO SECTION
+           ========================================================================== */
+        .bingo-hero { position: relative; height: 60vh; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background-color: var(--q-primary-dark); }
+        .bingo-hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?q=60&w=1200&auto=format&fit=crop') center/cover no-repeat; opacity: 0.2; animation: slowZoom 20s infinite alternate linear; }
+        @keyframes slowZoom { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+        .bingo-overlay { position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(212,163,115,0.1) 0%, var(--q-primary-dark) 100%); z-index: 2; }
+        
+        .bingo-hero-content { position: relative; z-index: 3; color: var(--q-gold); max-width: 800px; padding: 0 20px; margin-top: 50px; }
+        .bingo-hero-content h1 { font-size: clamp(3.5rem, 6vw, 5.5rem); margin-bottom: 10px; text-shadow: 0 10px 30px rgba(212,163,115,0.4); }
+        .bingo-hero-content p { font-size: 1.4rem; color: var(--q-white); font-weight: 300; }
+
+        /* ==========================================================================
+           6. BINGO GAME ENGINE
+           ========================================================================== */
+        .bingo-section { padding: 0 0 120px; position: relative; z-index: 5; margin-top: -80px; }
+        
+        .bingo-card { background: var(--glass-bg); backdrop-filter: blur(20px); border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); padding: 60px; max-width: 700px; margin: 0 auto; position: relative; border: 2px solid var(--q-gold); text-align: center; }
+        .bingo-card::before { content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 80px; height: 30px; background: var(--q-gold); border-radius: 50px; box-shadow: 0 5px 15px rgba(212,163,115,0.5); }
+        
+        .bingo-icon { font-size: 60px; color: var(--q-gold); margin-bottom: 20px; text-shadow: 0 5px 15px rgba(212,163,115,0.4); animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .bingo-card h2 { font-size: 28px; color: var(--q-primary-dark); margin-bottom: 10px; }
+        .bingo-card p { color: var(--q-gray); font-size: 16px; margin-bottom: 40px; }
+
+        .code-input-group { position: relative; max-width: 500px; margin: 0 auto; }
+        .code-input { width: 100%; padding: 25px 30px; background: var(--q-off-white); border: 2px dashed var(--q-gold); border-radius: 20px; font-size: 28px; font-family: 'Courier New', Courier, monospace; font-weight: 900; color: var(--q-primary-dark); text-align: center; text-transform: uppercase; transition: var(--trans-fast); letter-spacing: 5px; outline: none; }
+        .code-input:focus { background: var(--q-white); border-style: solid; box-shadow: 0 0 30px rgba(212,163,115,0.3); }
+        .code-input::placeholder { font-size: 16px; letter-spacing: 0; font-family: var(--font-main); font-weight: 500; color: #cbd5e1; }
+
+        .btn-check-luck { width: 100%; max-width: 500px; background: linear-gradient(135deg, var(--q-gold) 0%, #b0895c 100%); color: var(--q-white); padding: 22px; border-radius: 15px; font-weight: 900; font-family: var(--font-heading); font-size: 20px; margin-top: 25px; transition: var(--trans-smooth); box-shadow: 0 15px 30px rgba(212,163,115,0.4); border: none; cursor: pointer; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-check-luck:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(212,163,115,0.6); }
+        .btn-check-luck:disabled { background: #d1d5db; cursor: not-allowed; transform: none; box-shadow: none; color: #9ca3af; text-shadow: none; }
+
+        .prize-result { margin-top: 30px; padding: 25px; border-radius: 20px; font-weight: 900; font-size: 22px; display: none; font-family: var(--font-heading); animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        
+        .prize-win { background: rgba(16, 185, 129, 0.1); color: #059669; border: 2px solid #10b981; }
+        .prize-lose { background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 2px dashed #ef4444; }
+
+        /* ==========================================================================
+           7. HOW IT WORKS
+           ========================================================================== */
+        .steps-section { padding: 60px 0 100px; text-align: center; }
+        .steps-section h2 { font-size: 2.5rem; color: var(--q-primary); margin-bottom: 50px; }
+        
+        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+        .step-card { padding: 40px 30px; }
+        .step-num { width: 60px; height: 60px; background: var(--q-gold); color: var(--q-white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; margin: 0 auto 20px; box-shadow: 0 10px 20px rgba(212,163,115,0.4); }
+        .step-card h3 { font-size: 20px; color: var(--q-primary-dark); margin-bottom: 15px; }
+        .step-card p { color: var(--q-gray); font-size: 15px; }
+
+        /* ==========================================================================
+           8. THE MEGA FOOTER
+           ========================================================================== */
+        .mega-footer { background: #040d0a; color: #9ca3af; padding: 100px 0 0; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 60px; margin-bottom: 60px; }
+        .f-brand h3 { font-size: 32px; color: var(--q-white); margin-bottom: 25px; }
+        .f-brand h3 span { color: var(--q-gold); }
+        .f-brand p { line-height: 1.9; margin-bottom: 30px; font-size: 15px; max-width: 400px; }
+        .f-links h4 { color: var(--q-white); font-size: 22px; margin-bottom: 30px; position: relative; display: inline-block; }
+        .f-links h4::after { content: ''; position: absolute; bottom: -10px; right: 0; width: 40px; height: 3px; background: var(--q-gold); }
+        .f-links ul li { margin-bottom: 15px; }
+        .f-links ul a { transition: var(--trans-fast); display: flex; align-items: center; gap: 10px; }
+        .f-links ul a:hover { color: var(--q-gold); }
+        .f-contact li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+        .f-contact i { color: var(--q-gold); font-size: 20px; margin-top: 5px; }
+        .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 30px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .dev-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); transition: var(--trans-fast); }
+        .dev-badge:hover { background: rgba(255,255,255,0.08); border-color: var(--q-accent); }
+        .dev-badge span { font-size: 13px; color: #6b7280; }
+        .dev-badge a { color: var(--q-white); font-weight: 900; font-family: var(--font-heading); letter-spacing: 1px; font-size: 14px; }
+
+        @media (max-width: 992px) { .footer-grid { grid-template-columns: 1fr 1fr; } .steps-grid { grid-template-columns: 1fr; } .bingo-card { padding: 40px 20px; } }
+        @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr; } .bingo-hero-content h1 { font-size: 3.5rem; } .code-input { font-size: 22px; letter-spacing: 2px; } }
+    </style>
+</head>
+<body>
+
+    
+
+    <header class="main-header" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-box">قهوتنا وبس</a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="mobile-nav-overlay" id="mobileNav">
+                <button class="close-menu-btn" id="closeMenuBtn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="mobile-logo">قهوتنا وبس</div>
+                <ul class="mobile-menu-list">
+                    <li><a href="index.html"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                    <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> عنا</a></li>
+                    <li><a href="menu.html"><i class="fa-solid fa-mug-hot"></i> المنيو</a></li>
+                    <li><a href="rating.html"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                    <li><a href="complaints.html"><i class="fa-solid fa-head-side-cough"></i> الشكاوى</a></li>
+                    <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                    <li><a href="location.html"><i class="fa-solid fa-location-dot"></i> الفروع</a></li>
+                    <li><a href="jobs.html"><i class="fa-solid fa-briefcase"></i> التوظيف</a></li>
+                    <li><a href="bingo.html" style="color: var(--q-gold); font-weight: 900;"><i class="fa-solid fa-gift"></i> لعبة البينجو</a></li>
+                    <li><a href="login.html"><i class="fa-solid fa-shield-halved"></i> الإدارة</a></li>
+                </ul>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-item">الرئيسية</a></li>
+                    <li><a href="about.html" class="nav-item">عنا</a></li>
+                    <li class="nav-item has-dropdown">
+                        <span>المنيو <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-mug-hot"></i> المشروبات الساخنة</a></li>
+                            <li><a href="menu.html" class="dropdown-link"><i class="fa-solid fa-glass-water"></i> المشروبات الباردة</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item has-dropdown">
+                        <span>خدمات الزبائن <i class="fa-solid fa-chevron-down"></i></span>
+                        <ul class="dropdown-menu">
+                            <li><a href="rating.html" class="dropdown-link"><i class="fa-solid fa-star"></i> تقييم الأداء</a></li>
+                            <li><a href="complaints.html" class="dropdown-link"><i class="fa-solid fa-headset"></i> مكتب الشكاوى</a></li>
+                            <li><a href="contact.html" class="dropdown-link"><i class="fa-solid fa-envelope"></i> تواصل معنا</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="location.html" class="nav-item">الفروع</a></li>
+                    <li><a href="jobs.html" class="nav-item">التوظيف</a></li>
+                    <li><a href="bingo.html" class="nav-item active bingo-link"><i class="fa-solid fa-gift"></i> بينجو</a></li>
+                    <li>
+                        <a href="login.html" class="btn-auth">
+                            <i class="fa-solid fa-shield-halved"></i> الإدارة المركزية
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="bingo-hero">
+        <div class="bingo-hero-bg"></div>
+        <div class="bingo-overlay"></div>
+        <div class="bingo-hero-content" data-aos="zoom-in" data-aos-duration="1000">
+            <h1>BINGO</h1>
+        </div>
+    </section>
+
+    <section class="bingo-section">
+        <div class="container">
+            <div class="bingo-card" data-aos="fade-up">
+                <i class="fa-solid fa-ticket bingo-icon"></i>
+                <h2>جرب حظك ؟</h2>
+                <p>تاكد انه فاتورتك فوق 10 دنانير و هاي مش اول زيارة الك عنا ، فرصة لتربح جوائز مش موجدة الا عنا وبس</p>
+                <form id="bingoForm">
+                    <div class="code-input-group">
+                        <input type="text" id="bCode" class="code-input" placeholder="دخل رقم فاتورتك و جرب حظك" maxlength="15" autocomplete="off" required>
+                    </div>
+                    <button type="submit" id="bSubmit" class="btn-check-luck">تحقق من الكود <i class="fa-solid fa-wand-magic-sparkles ms-2"></i></button>
+                    <div id="bResult" class="prize-result"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="steps-section" data-aos="fade-up">
+        <div class="container">
+            <h2>شوف ، تاكد انه فاتورتك خاضعة لشروط والاحكام</h2>
+            <div class="steps-grid">
+                <div class="step-card"><div class="step-num">1</div><h3>اطلب طلبك</h3><p>قم بزيارة أي من فروعنا واطلب مشروبك المفضل.</p></div>
+                <div class="step-card"><div class="step-num">2</div><h3>احتفظ بالفاتورة</h3><p>ستجد كوداً خاصاً مطبوعاً  بالفاتورة الورقية.</p></div>
+                <div class="step-card"><div class="step-num">3</div><h3>أدخل الكود واربح</h3><p>أدخل الكود هنا. إذا كان الكود رابحاً، سيظهر لك الخصم فوراً!</p></div>
+                <div class="step-card"><div class="step-num">4</div><h3>أنت وحظك</h3><p>ليس الجميع يقدر يفوز فقط المحظوظين!</p></div>
+                <div class="step-card"><div class="step-num">5</div><h3>القيمة</h3><p>يجب أن تكون قيمة الفاتورة فوق 10JD.</p></div>
+                <div class="step-card"><div class="step-num">6</div><h3>الزيارة</h3><p>يجب ألا تكون هذه أول زيارة لك لتربح.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mega-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="f-brand">
+                    <h3>قهوتنا <span>وبس</span></h3>
+                    <p>المجتمع الأول في الاردن ، نحمص الشغف لنقدمه في كوبك.</p>
+                </div>
+                <div class="f-links">
+                    <h4>تصفح الموقع</h4>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="menu.html">المنيو</a></li>
+                        <li><a href="bingo.html">لعبة البينجو</a></li>
+                    </ul>
+                </div>
+                <div class="f-links">
+                    <h4>الإدارة</h4>
+                    <ul>
+                        <li><a href="jobs.html">التوظيف</a></li>
+                        <li><a href="complaints.html">مكتب الشكاوى</a></li>
+                        <li><a href="login.html" style="color: var(--q-gold);">دخول الإدارة</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="f-bottom">
+                <div class="copyright-text">© 2026 جميع الحقوق محفوظة لعلامة "قهوتنا وبس".</div>
+                <div class="dev-badge">
+                    <span>System Engineered with <i class="fa-solid fa-heart"></i> by</span>
+                    <a href="#" target="_blank">KARAM GHANDI </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // --- 1. إزالة Preloader والمؤثرات ---
+        window.addEventListener('load', () => { 
+            setTimeout(() => { 
+                const preloader = document.getElementById('preloader');
+                if(preloader) {
+                    preloader.style.opacity = '0'; 
+                    setTimeout(() => preloader.style.display = 'none', 300);
+                }
+            }, 500); 
+        });
+        AOS.init({ once: true, duration: 800 });
+        window.addEventListener('scroll', () => { 
+            const n = document.getElementById('navbar'); 
+            if(window.scrollY > 50) n.classList.add('scrolled'); 
+            else n.classList.remove('scrolled'); 
+        });
+
+        // --- 2. تشغيل قائمة الموبايل (البرجر) ---
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeMenuBtn');
+
+        if (mobileBtn && mobileNav) {
+            mobileBtn.addEventListener('click', () => { mobileNav.classList.add('active'); });
+        }
+        if (closeBtn && mobileNav) {
+            closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
+        }
+        document.addEventListener('click', (e) => {
+            if (mobileNav && mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && !mobileBtn.contains(e.target)) {
+                mobileNav.classList.remove('active');
+            }
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBQLp5FeHaP3vcJfuY22DtGu48j0fyveb0", 
+            authDomain: "qahwtna-b65ca.firebaseapp.com", 
+            projectId: "qahwtna-b65ca" 
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById('bingoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('bSubmit');
+            const resultBox = document.getElementById('bResult');
+            const codeInput = document.getElementById('bCode').value.trim().toUpperCase(); 
+            
+            btn.innerHTML = 'جاري الاتصال بالسيرفر... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            resultBox.style.display = 'none';
+
+            try {
+                const q = query(collection(db, "bingo"), where("code", "==", codeInput));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) throw new Error("عذراً، هذا الكود غير موجود أو تم إبطاله سيادياً!");
+
+                const docSnap = snapshot.docs[0];
+                const data = docSnap.data();
+                const today = new Date().toISOString().split('T')[0];
+
+                if (data.valid_until < today) throw new Error("انتهت صلاحية هذا الكود!");
+                if (parseInt(data.cards) <= 0) throw new Error("نفدت جميع الجوائز المخصصة لهذا الكود!");
+
+                const myClaims = JSON.parse(localStorage.getItem('qahwa_bingo_claims') || '{}');
+                if (myClaims[codeInput]) {
+                    resultBox.className = "prize-result prize-win";
+                    resultBox.innerHTML = `⚠️ لقد استلمت جائزتك مسبقاً لهذا الكود: <br><strong>${myClaims[codeInput]}</strong>`;
+                    resultBox.style.display = "block";
+                    return;
+                }
+
+                await updateDoc(doc(db, "bingo", docSnap.id), { cards: increment(-1) });
+
+                myClaims[codeInput] = data.prize;
+                localStorage.setItem('qahwa_bingo_claims', JSON.stringify(myClaims));
+
+                resultBox.className = "prize-result prize-win";
+                resultBox.innerHTML = `🎉 مبروك يا بطل! لقد ربحت: <br><strong>${data.prize}</strong>`;
+
+            } catch (error) {
+                resultBox.className = "prize-result prize-lose";
+                resultBox.innerHTML = `⚠️ ${error.message}`;
+            } finally {
+                resultBox.style.display = "block";
+                btn.innerHTML = 'تحقق من الكود <i class="fa-solid fa-wand-magic-sparkles ms-2"></i>';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
