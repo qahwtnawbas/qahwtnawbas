@@ -533,42 +533,72 @@
         };
 
         // 4. Hero Slider Implementation
-        const sliderContent = [
-            { img: 'background3.png', t: 'أهلاً بك في <span>قهوتنا وبس</span>.', d: 'نحن لا نصنع القهوة، نحن نبني مجتمعاً يجمعه الشغف والجودة المطلقة في كل كوب نعده لك.' },
-            { img: 'background4.png', t: 'قهوة <span>طازجة</span> يومياً.', d: 'قهوتنا وبس كله اول بأول ، من القهوة ل شاي ل كل شي عنا ؟' },
-            { img: 'coffee.png', t: 'بيئة <span>للإبداع والإنجاز</span>.', d: 'صممنا فروعنا لتكون المكان الأمثل للدراسة، العمل، أو لقاء الأصدقاء في جو هادئ وراقٍ يغمر حواسك.' }
-        ];
+       // 4. Hero Slider Implementation (المطور ليدعم الفيديو)
+const sliderContent = [
+    { 
+        img: 'qahwa.mp4', 
+        t: 'أهلاً بك في <span>قهوتنا وبس</span>.', 
+        d: '' 
+    },
+    { 
+        img: 'background8.png', 
+        t: 'قهوة <span>طازجة</span> يومياً.', 
+        d: 'قهوتنا وبس كله اول بأول ، من القهوة ل شاي ل كل شي عنا ؟' 
+    },
+    { 
+        img: 'coffee.png', 
+        t: 'بيئة <span>للإبداع والإنجاز</span>.', 
+        d: 'صممنا فروعنا لتكون المكان الأمثل للدراسة، العمل، أو لقاء الأصدقاء في جو هادئ وراقٍ يغمر حواسك.' 
+    }
+];
 
-        const sliderCont = document.getElementById('main-slider');
-        if(sliderCont) {
-            sliderContent.forEach((s, i) => {
-                const slide = document.createElement('div');
-                slide.className = `slide ${i===0 ? 'active' : ''}`;
-                slide.style.backgroundImage = `url('${s.img}')`;
-                slide.innerHTML = `
-                    <div class="slide-overlay"></div>
-                    <div class="container hero-content">
-                        <h1>${s.t}</h1>
-                        <p>${s.d}</p>
-                        <div class="hero-btns">
-                            <a href="menu.html" class="btn-xl btn-xl-gold"> تصفح المنيو</a>
-                            <a href="location.html" class="btn-xl btn-xl-outline">فروعنا</a>
-                        </div>
-                    </div>
-                `;
-                sliderCont.appendChild(slide);
-            });
+const sliderCont = document.getElementById('main-slider');
 
-            let currentSlide = 0;
-            setInterval(() => {
-                const slides = document.querySelectorAll('.slide');
-                if(slides.length > 0) {
-                    slides[currentSlide].classList.remove('active');
-                    currentSlide = (currentSlide + 1) % slides.length;
-                    slides[currentSlide].classList.add('active');
-                }
-            }, 7000);
+if(sliderCont) {
+    sliderContent.forEach((s, i) => {
+        const slide = document.createElement('div');
+        slide.className = `slide ${i===0 ? 'active' : ''}`;
+        
+        let mediaHTML = "";
+        // فحص نوع الملف: إذا كان فيديو نضع وسم video وإذا صورة نضع وسم img أو خلفية
+        if (s.img.toLowerCase().endsWith('.mp4')) {
+            mediaHTML = `
+                <video src="${s.img}" autoplay loop muted playsinline 
+                       style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:1;">
+                </video>`;
+        } else {
+            // نستخدم div مع خلفية للصور العادية لضمان التناسق
+            mediaHTML = `<div style="position:absolute; top:0; left:0; width:100%; height:100%; background-image:url('${s.img}'); background-size:cover; background-position:center; z-index:1;"></div>`;
         }
+
+        slide.innerHTML = `
+            <div class="slide-overlay" style="z-index:2;"></div>
+            ${mediaHTML}
+            <div class="container hero-content" style="z-index:3;">
+                <h1>${s.t}</h1>
+                <p>${s.d}</p>
+                <div class="hero-btns">
+                    <a href="menu.html" class="btn-xl btn-xl-gold"> تصفح المنيو</a>
+                    <a href="location.html" class="btn-xl btn-xl-outline">فروعنا</a>
+                </div>
+            </div>
+        `;
+        sliderCont.appendChild(slide);
+    });
+
+    // تحريك السلايدر كل 7 ثواني
+    let currentSlide = 0;
+    setInterval(() => {
+        const slides = document.querySelectorAll('.slide');
+        if(slides.length > 0) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+    }, 17500);
+}
+
+           
 
         // 5. Counters Logic
         const counters = document.querySelectorAll('.counter');
