@@ -6,14 +6,15 @@
 
 // 1. إعدادات فايربيس المركزية الخاصة بمشروع (قهوتنا وبس)
 const firebaseConfig = {
-    apiKey: "AIzaSyBdVlmeL7S3FamhcoP5u5JUQQLULsdDB7g",
-    authDomain: "only-our-coffee.firebaseapp.com",
-    projectId: "only-our-coffee",
-    storageBucket: "only-our-coffee.firebasestorage.app",
-    messagingSenderId: "538634949823",
-    appId: "1:538634949823:web:d24c981da4d1779fb9220a"
+  apiKey: "AIzaSyBQLp5FeHaP3vcJfuY22DtGu48j0fyveb0",
+  authDomain: "qahwtna-b65ca.firebaseapp.com",
+  databaseURL: "https://qahwtna-b65ca-default-rtdb.firebaseio.com",
+  projectId: "qahwtna-b65ca",
+  storageBucket: "qahwtna-b65ca.firebasestorage.app",
+  messagingSenderId: "459213176846",
+  appId: "1:459213176846:web:3ae7c60c1f33716f237c5f",
+  measurementId: "G-Y41EW2S82E"
 };
-
 // تهيئة فايربيس 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
